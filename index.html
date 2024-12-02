@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              montserrat: ["Montserrat", "sans-serif"],
+            },
+            colors: {
+              primary: "#1A2BC3",
+              secondary: "#FFDE59",
+              compliment: "#0E0F52",
+              bone: "#FEFDF8",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-primary font-montserrat">
+    <div class="sidebar hidden md:block">
+      <ul>
+        <li class="font-extrabold">Stockify</li>
+        <li class="">Dashboard</li>
+        <li class="">Add Product</li>
+        <li class="">Account</li>
+        <li class="">Contact Us</li>
+      </ul>
+    </div>
+
+    <main class="m-3">
+      <header class="flex justify-between">
+        <h1 class="greet font-extrabold text-2xl text-bone">Hi, Username</h1>
+        <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
+          Logout
+        </button>
+      </header>
+      <section class="mt-3">
+        <div class="card bg-secondary text-primary flex items-center">
+          <div class="icon-wrap size-8 mx-2 my-3">
+            <img src="assets/home.png" alt="" />
+          </div>
+          <div class="text ml-2">
+            <h2 class="text-sm font-medium">Total Product</h2>
+            <p class="font-extrabold text-xl -mt-1">0</p>
+          </div>
+        </div>
+        <div class="card bg-secondary text-primary flex items-center mt-2">
+          <div class="icon-wrap size-8 mx-2 my-3">
+            <img src="assets/home.png" alt="" />
+          </div>
+          <div class="text ml-2">
+            <h2 class="text-sm font-medium">Total Value</h2>
+            <p class="font-extrabold text-xl -mt-1">Rp. 0</p>
+          </div>
+        </div>
+        <div class="card bg-secondary text-primary flex items-center mt-2">
+          <div class="icon-wrap size-8 mx-2 my-3">
+            <img src="assets/home.png" alt="" />
+          </div>
+          <div class="text ml-2">
+            <h2 class="text-sm font-medium">Category</h2>
+            <p class="font-extrabold text-xl -mt-1">0</p>
+          </div>
+        </div>
+      </section>
+      <div class="menu-info mt-3">
+        <h2 class="text-bone font-semibold">Inventory</h2>
+        <div class="feature flex items-center justify-between">
+          <button class="bg-bone text-primary text-xs p-1 rounded-sm">
+            Default
+          </button>
+          <input
+            type="text"
+            class="rounded-full px-2 py-1 text-primary text-xs placeholder:text-primary placeholder:text-xs h-6 focus:outline-none"
+            placeholder="Search items"
+          />
+        </div>
+      </div>
+      <div class="data">
+        <table class="mt-3">
+          <thead>
+            <tr class="bg-compliment border-bone">
+              <th class="text-bone text-xs border p-2">No</th>
+              <th class="text-bone text-xs border p-2">Name</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>
