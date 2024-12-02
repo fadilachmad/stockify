@@ -26,76 +26,116 @@
       };
     </script>
   </head>
-  <body class="bg-primary font-montserrat">
-    <div class="sidebar hidden md:block">
-      <ul>
-        <li class="font-extrabold">Stockify</li>
-        <li class="">Dashboard</li>
-        <li class="">Add Product</li>
-        <li class="">Account</li>
-        <li class="">Contact Us</li>
-      </ul>
-    </div>
+  <body class="bg-primary font-montserrat h-screen">
+    <div class="content md:grid grid-cols-12">
+      <div class="sidebar col-span-2 hidden md:block bg-bone h-screen">
+        <ul>
+          <li class="font-extrabold text-compliment text-center my-3 text-xl">
+            Stockify
+          </li>
+          <li class="bg-secondary bg-opacity-75 border-r-4 border-compliment">
+            <a href="" class="block p-4 text-center">Dashboard</a>
+          </li>
+          <li class="">
+            <a href="" class="block p-4 text-center">Add Product</a>
+          </li>
+          <li class="">
+            <a href="" class="block p-4 text-center">Account</a>
+          </li>
+          <li class="">
+            <a href="" class="block p-4 text-center">Contact Us</a>
+          </li>
+        </ul>
+      </div>
 
-    <main class="m-3">
-      <header class="flex justify-between">
-        <h1 class="greet font-extrabold text-2xl text-bone">Hi, Username</h1>
-        <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
-          Logout
-        </button>
-      </header>
-      <section class="mt-3">
-        <div class="card bg-secondary text-primary flex items-center">
-          <div class="icon-wrap size-8 mx-2 my-3">
-            <img src="assets/home.png" alt="" />
-          </div>
-          <div class="text ml-2">
-            <h2 class="text-sm font-medium">Total Product</h2>
-            <p class="font-extrabold text-xl -mt-1">0</p>
-          </div>
-        </div>
-        <div class="card bg-secondary text-primary flex items-center mt-2">
-          <div class="icon-wrap size-8 mx-2 my-3">
-            <img src="assets/home.png" alt="" />
-          </div>
-          <div class="text ml-2">
-            <h2 class="text-sm font-medium">Total Value</h2>
-            <p class="font-extrabold text-xl -mt-1">Rp. 0</p>
-          </div>
-        </div>
-        <div class="card bg-secondary text-primary flex items-center mt-2">
-          <div class="icon-wrap size-8 mx-2 my-3">
-            <img src="assets/home.png" alt="" />
-          </div>
-          <div class="text ml-2">
-            <h2 class="text-sm font-medium">Category</h2>
-            <p class="font-extrabold text-xl -mt-1">0</p>
-          </div>
-        </div>
-      </section>
-      <div class="menu-info mt-3">
-        <h2 class="text-bone font-semibold">Inventory</h2>
-        <div class="feature flex items-center justify-between">
-          <button class="bg-bone text-primary text-xs p-1 rounded-sm">
-            Default
+      <main class="m-3 col-span-10">
+        <header class="flex justify-between">
+          <h1 class="greet font-extrabold text-2xl text-bone">Hi, Username</h1>
+          <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
+            Logout
           </button>
-          <input
-            type="text"
-            class="rounded-full px-2 py-1 text-primary text-xs placeholder:text-primary placeholder:text-xs h-6 focus:outline-none"
-            placeholder="Search items"
-          />
+        </header>
+        <section class="mt-1 md:grid grid-cols-3 gap-3">
+          <div
+            class="card bg-secondary text-primary flex items-center mt-2 md:h-24"
+          >
+            <div class="icon-wrap size-8 mx-2 my-3">
+              <img src="assets/home.png" alt="" />
+            </div>
+            <div class="text ml-2 md:ml-5">
+              <h2 class="text-sm font-medium md:text-xl">Total Product</h2>
+              <p class="font-extrabold text-xl -mt-1 md:text-3xl">0</p>
+            </div>
+          </div>
+          <div class="card bg-secondary text-primary flex items-center mt-2">
+            <div class="icon-wrap size-8 mx-2 my-3">
+              <img src="assets/home.png" alt="" />
+            </div>
+            <div class="text ml-2 md:ml-5">
+              <h2 class="text-sm font-medium md:text-xl">Total Value</h2>
+              <p class="font-extrabold text-xl -mt-1 md:text-3xl">Rp. 0</p>
+            </div>
+          </div>
+          <div class="card bg-secondary text-primary flex items-center mt-2">
+            <div class="icon-wrap size-8 mx-2 my-3">
+              <img src="assets/home.png" alt="" />
+            </div>
+            <div class="text ml-2 md:ml-5">
+              <h2 class="text-sm font-medium md:text-xl">Category</h2>
+              <p class="font-extrabold text-xl -mt-1 md:text-3xl">0</p>
+            </div>
+          </div>
+        </section>
+        <div class="menu-info mt-3">
+          <h2 class="text-bone font-semibold md:text-xl md:mb-2">Inventory</h2>
+          <div class="feature flex items-center justify-between">
+            <button
+              class="bg-bone text-primary text-xs p-1 rounded-sm md:text-base"
+            >
+              Default
+            </button>
+            <input
+              type="text"
+              class="rounded-full px-2 py-1 text-primary text-xs placeholder:text-primary placeholder:text-xs focus:outline-none md:text-base md:placeholder:text-base"
+              placeholder="Search items"
+            />
+          </div>
         </div>
-      </div>
-      <div class="data">
-        <table class="mt-3">
-          <thead>
-            <tr class="bg-compliment border-bone">
-              <th class="text-bone text-xs border p-2">No</th>
-              <th class="text-bone text-xs border p-2">Name</th>
-            </tr>
-          </thead>
-        </table>
-      </div>
-    </main>
+        <div class="data overflow-auto">
+          <table class="mt-3 w-full">
+            <thead>
+              <tr class="bg-compliment border-bone">
+                <th class="text-bone text-xs md:text-base border p-2 md:w-14">
+                  No
+                </th>
+                <th class="text-bone text-xs md:text-base border p-2">Name</th>
+                <th class="text-bone text-xs md:text-base border p-2 md:w-1/4">
+                  Category
+                </th>
+                <th class="text-bone text-xs md:text-base border p-2 md:w-1/6">
+                  Price
+                </th>
+                <th class="text-bone text-xs md:text-base border p-2 md:w-1/12">
+                  Quantity
+                </th>
+                <th class="text-bone text-xs md:text-base border p-2 md:w-1/12">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody class="text-bone">
+              <tr>
+                <td class="border text-xs md:text-base p-2">1</td>
+                <td class="border text-xs md:text-base p-2">Product 1</td>
+                <td class="border text-xs md:text-base p-2">Category 1</td>
+                <td class="border text-xs md:text-base p-2">Rp. 1000</td>
+                <td class="border text-xs md:text-base p-2">10</td>
+                <td class="border text-xs md:text-base p-2">Edit</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
   </body>
 </html>
