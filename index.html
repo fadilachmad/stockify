@@ -26,8 +26,8 @@
       };
     </script>
   </head>
-  <body class="bg-primary font-montserrat h-screen">
-    <div class="content md:grid grid-cols-12">
+  <body class="bg-primary font-montserrat">
+    <div class="content md:grid grid-cols-12 h-screen overflow-hidden">
       <!-- Sidebar -->
       <div class="sidebar col-span-2 hidden md:block bg-bone h-screen">
         <ul>
@@ -46,7 +46,7 @@
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="index.html" class="p-4 flex items-center">
+            <a href="addProduct.html" class="p-4 flex items-center">
               <ion-icon
                 name="create-outline"
                 class="text-2xl ml-3 mr-10"
@@ -57,7 +57,7 @@
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="index.html" class="p-4 flex items-center">
+            <a href="account.html" class="p-4 flex items-center">
               <ion-icon
                 name="cafe-outline"
                 class="text-2xl ml-3 mr-10"
@@ -68,7 +68,7 @@
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="index.html" class="p-4 flex items-center">
+            <a href="contactUs.html" class="p-4 flex items-center">
               <ion-icon
                 name="chatbubbles-outline"
                 class="text-2xl ml-3 mr-10"
@@ -95,21 +95,27 @@
           <li
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
-            <a href="index.html" class="flex items-center justify-center p-5">
+            <a
+              href="addProduct.html"
+              class="flex items-center justify-center p-5"
+            >
               <ion-icon name="create-outline" class="text-3xl"></ion-icon>
             </a>
           </li>
           <li
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
-            <a href="index.html" class="flex items-center justify-center p-5">
+            <a href="account.html" class="flex items-center justify-center p-5">
               <ion-icon name="cafe-outline" class="text-3xl"></ion-icon>
             </a>
           </li>
           <li
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
-            <a href="index.html" class="flex items-center justify-center p-5">
+            <a
+              href="contactUs.html"
+              class="flex items-center justify-center p-5"
+            >
               <ion-icon name="chatbubbles-outline" class="text-3xl"></ion-icon>
             </a>
           </li>
@@ -118,7 +124,7 @@
       <!-- End Bottombar Mobile -->
 
       <!-- Main Content -->
-      <main class="m-3 col-span-10">
+      <main class="m-3 col-span-10 overflow-auto">
         <header class="flex justify-between">
           <h1 class="greet font-extrabold text-2xl text-bone">Hi, Username</h1>
           <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
