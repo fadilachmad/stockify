@@ -28,26 +28,96 @@
   </head>
   <body class="bg-primary font-montserrat h-screen">
     <div class="content md:grid grid-cols-12">
+      <!-- Sidebar -->
       <div class="sidebar col-span-2 hidden md:block bg-bone h-screen">
         <ul>
-          <li class="font-extrabold text-compliment text-center my-3 text-xl">
+          <li class="font-extrabold text-compliment text-center my-4 text-xl">
             Stockify
           </li>
           <li class="bg-secondary bg-opacity-75 border-r-4 border-compliment">
-            <a href="" class="block p-4 text-center">Dashboard</a>
+            <a href="index.html" class="p-4 flex items-center">
+              <ion-icon
+                name="file-tray-full"
+                class="text-2xl ml-3 mr-10"
+              ></ion-icon>
+              <p>Dashboard</p>
+            </a>
           </li>
-          <li class="">
-            <a href="" class="block p-4 text-center">Add Product</a>
+          <li
+            class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
+          >
+            <a href="index.html" class="p-4 flex items-center">
+              <ion-icon
+                name="create-outline"
+                class="text-2xl ml-3 mr-10"
+              ></ion-icon>
+              <p>Add Product</p>
+            </a>
           </li>
-          <li class="">
-            <a href="" class="block p-4 text-center">Account</a>
+          <li
+            class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
+          >
+            <a href="index.html" class="p-4 flex items-center">
+              <ion-icon
+                name="cafe-outline"
+                class="text-2xl ml-3 mr-10"
+              ></ion-icon>
+              <p>Account</p>
+            </a>
           </li>
-          <li class="">
-            <a href="" class="block p-4 text-center">Contact Us</a>
+          <li
+            class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
+          >
+            <a href="index.html" class="p-4 flex items-center">
+              <ion-icon
+                name="chatbubbles-outline"
+                class="text-2xl ml-3 mr-10"
+              ></ion-icon>
+              <p>Contact Us</p>
+            </a>
           </li>
         </ul>
       </div>
+      <!-- End Sidebar -->
 
+      <!-- Bottombar Mobile -->
+      <div
+        class="bottombar fixed bg-bone bottom-0 right-0 left-0 w-screen md:hidden"
+      >
+        <ul class="flex">
+          <li
+            class="bg-secondary bg-opacity-75 border-t-4 border-compliment w-1/4 h-16 flex justify-center items-center"
+          >
+            <a href="index.html" class="flex items-center justify-center p-5">
+              <ion-icon name="file-tray-full" class="text-3xl"></ion-icon>
+            </a>
+          </li>
+          <li
+            class="border-compliment w-1/4 h-16 flex justify-center items-center"
+          >
+            <a href="index.html" class="flex items-center justify-center p-5">
+              <ion-icon name="create-outline" class="text-3xl"></ion-icon>
+            </a>
+          </li>
+          <li
+            class="border-compliment w-1/4 h-16 flex justify-center items-center"
+          >
+            <a href="index.html" class="flex items-center justify-center p-5">
+              <ion-icon name="cafe-outline" class="text-3xl"></ion-icon>
+            </a>
+          </li>
+          <li
+            class="border-compliment w-1/4 h-16 flex justify-center items-center"
+          >
+            <a href="index.html" class="flex items-center justify-center p-5">
+              <ion-icon name="chatbubbles-outline" class="text-3xl"></ion-icon>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- End Bottombar Mobile -->
+
+      <!-- Main Content -->
       <main class="m-3 col-span-10">
         <header class="flex justify-between">
           <h1 class="greet font-extrabold text-2xl text-bone">Hi, Username</h1>
@@ -59,30 +129,35 @@
           <div
             class="card bg-secondary text-primary flex items-center mt-2 md:h-24"
           >
-            <div class="icon-wrap size-8 mx-2 my-3">
-              <img src="assets/home.png" alt="" />
-            </div>
-            <div class="text ml-2 md:ml-5">
+            <ion-icon
+              name="cube-outline"
+              class="text-3xl my-3 mx-3 md:text-[48px]"
+            ></ion-icon>
+            <div class="text">
               <h2 class="text-sm font-medium md:text-xl">Total Product</h2>
-              <p class="font-extrabold text-xl -mt-1 md:text-3xl">0</p>
+              <p class="font-extrabold text-xl -mt-1 md:text-3xl">5</p>
             </div>
           </div>
           <div class="card bg-secondary text-primary flex items-center mt-2">
-            <div class="icon-wrap size-8 mx-2 my-3">
-              <img src="assets/home.png" alt="" />
-            </div>
-            <div class="text ml-2 md:ml-5">
+            <ion-icon
+              name="journal-outline"
+              class="text-3xl my-3 mx-3 md:text-[48px]"
+            ></ion-icon>
+            <div class="text">
               <h2 class="text-sm font-medium md:text-xl">Total Value</h2>
-              <p class="font-extrabold text-xl -mt-1 md:text-3xl">Rp. 0</p>
+              <p class="font-extrabold text-xl -mt-1 md:text-3xl">
+                Rp. 35,000,000
+              </p>
             </div>
           </div>
           <div class="card bg-secondary text-primary flex items-center mt-2">
-            <div class="icon-wrap size-8 mx-2 my-3">
-              <img src="assets/home.png" alt="" />
-            </div>
-            <div class="text ml-2 md:ml-5">
-              <h2 class="text-sm font-medium md:text-xl">Category</h2>
-              <p class="font-extrabold text-xl -mt-1 md:text-3xl">0</p>
+            <ion-icon
+              name="shapes-outline"
+              class="text-3xl my-3 mx-3 md:text-[48px]"
+            ></ion-icon>
+            <div class="text">
+              <h2 class="text-sm font-medium md:text-xl">Total Category</h2>
+              <p class="font-extrabold text-xl -mt-1 md:text-3xl">2</p>
             </div>
           </div>
         </section>
@@ -90,14 +165,15 @@
           <h2 class="text-bone font-semibold md:text-xl md:mb-2">Inventory</h2>
           <div class="feature flex items-center justify-between">
             <button
-              class="bg-bone text-primary text-xs p-1 rounded-sm md:text-base"
+              class="bg-bone text-primary text-xs p-1 rounded-sm md:text-base flex items-center justify-between"
             >
-              Default
+              <ion-icon name="funnel-outline"></ion-icon>
+              <p class="ml-2">Default</p>
             </button>
             <input
               type="text"
               class="rounded-full px-2 py-1 text-primary text-xs placeholder:text-primary placeholder:text-xs focus:outline-none md:text-base md:placeholder:text-base"
-              placeholder="Search items"
+              placeholder="Search items..."
             />
           </div>
         </div>
@@ -128,7 +204,7 @@
                 <td class="border text-xs md:text-base p-2">1</td>
                 <td class="border text-xs md:text-base p-2">Product 1</td>
                 <td class="border text-xs md:text-base p-2">Category 1</td>
-                <td class="border text-xs md:text-base p-2">Rp. 1000</td>
+                <td class="border text-xs md:text-base p-2">Rp. 100000</td>
                 <td class="border text-xs md:text-base p-2">10</td>
                 <td class="border text-xs md:text-base p-2">Edit</td>
               </tr>
@@ -136,6 +212,16 @@
           </table>
         </div>
       </main>
+      <!-- End Main Content -->
     </div>
+
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.js"
+    ></script>
   </body>
 </html>
