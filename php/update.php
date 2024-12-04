@@ -1,17 +1,18 @@
 <?php
 
-include 'php/config/conn.php';
+include 'config/conn.php';
 
 // Ambil data berdasarkan ID
 $id = $_GET['id'];
 $sql = "SELECT * FROM product WHERE id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(1, $id, PDO::PARAM_INT);
 $stmt->execute();
-$result = $stmt->get_result();
+$stmt->execute();
+$product = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($result->num_rows > 0) {
-    $product = $result->fetch_assoc();
+if ($product) {
+    // Product found
 } else {
     die("Produk tidak ditemukan.");
 }
@@ -27,21 +28,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validasi sederhana
     if (!empty($name) && !empty($category) && !empty($price) && !empty($quantity)) {
         $sql_update = "UPDATE product SET name = ?, category = ?, price = ?, quantity = ?, description = ? WHERE id = ?";
-        $stmt_update = $conn->prepare($sql_update);
-        $stmt_update->bind_param("ssdisi", $name, $category, $price, $quantity, $description, $id);
+        $stmt_update = $pdo->prepare($sql_update);
+        $stmt_update->bindValue(1, $name, PDO::PARAM_STR);
+        $stmt_update->bindValue(2, $category, PDO::PARAM_STR);
+        $stmt_update->bindValue(3, $price, PDO::PARAM_STR);
+        $stmt_update->bindValue(4, $quantity, PDO::PARAM_INT);
+        $stmt_update->bindValue(5, $description, PDO::PARAM_STR);
+        $stmt_update->bindValue(6, $id, PDO::PARAM_INT);
 
         if ($stmt_update->execute()) {
             header("Location: index.php");
             exit();
         } else {
-            echo "Gagal memperbarui data: " . $conn->error;
+            echo "Gagal memperbarui data: " . $stmt_update->errorInfo()[2];
         }
     } else {
         echo "Semua field harus diisi.";
     }
 }
 
-$conn->close();
+$pdo = null;
 ?>
 
 
@@ -101,7 +107,7 @@ $conn->close();
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="account.html" class="p-4 flex items-center">
+            <a href="account.php" class="p-4 flex items-center">
               <ion-icon
                 name="cafe-outline"
                 class="text-2xl ml-3 mr-10"
@@ -112,7 +118,7 @@ $conn->close();
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="contactUs.html" class="p-4 flex items-center">
+            <a href="contactUs.php" class="p-4 flex items-center">
               <ion-icon
                 name="chatbubbles-outline"
                 class="text-2xl ml-3 mr-10"
@@ -152,7 +158,7 @@ $conn->close();
           <li
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
-            <a href="account.html" class="flex items-center justify-center p-5">
+            <a href="account.php" class="flex items-center justify-center p-5">
               <ion-icon name="cafe-outline" class="text-3xl"></ion-icon>
             </a>
           </li>
@@ -160,7 +166,7 @@ $conn->close();
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
             <a
-              href="contactUs.html"
+              href="contactUs.php"
               class="flex items-center justify-center p-5"
             >
               <ion-icon name="chatbubbles-outline" class="text-3xl"></ion-icon>

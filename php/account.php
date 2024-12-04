@@ -8,7 +8,22 @@
 
     $username = $_SESSION['username'];
 
-    require 'connect.php';
+    require 'config/conn.php';
+
+    $sql = "SELECT email, user_bio FROM users WHERE username = :username";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      $email = $row['email'];
+      $user_bio = $row['user_bio'];
+    } else {
+      echo "User data not found.";
+    }
+
+    $pdo = null;
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +65,7 @@
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="index.html" class="p-4 flex items-center">
+            <a href="index.php" class="p-4 flex items-center">
               <ion-icon
                 name="file-tray-full-outline"
                 class="text-2xl ml-3 mr-10"
@@ -61,7 +76,7 @@
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="addProduct.html" class="p-4 flex items-center">
+            <a href="addProduct.php" class="p-4 flex items-center">
               <ion-icon
                 name="create-outline"
                 class="text-2xl ml-3 mr-10"
@@ -70,7 +85,7 @@
             </a>
           </li>
           <li class="bg-secondary bg-opacity-75 border-r-4 border-compliment">
-            <a href="account.html" class="p-4 flex items-center">
+            <a href="account.php" class="p-4 flex items-center">
               <ion-icon name="cafe" class="text-2xl ml-3 mr-10"></ion-icon>
               <p>Account</p>
             </a>
@@ -78,7 +93,7 @@
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="contactUs.html" class="p-4 flex items-center">
+            <a href="contactUs.php" class="p-4 flex items-center">
               <ion-icon
                 name="chatbubbles-outline"
                 class="text-2xl ml-3 mr-10"
@@ -98,7 +113,7 @@
           <li
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
-            <a href="index.html" class="flex items-center justify-center p-5">
+            <a href="index.php" class="flex items-center justify-center p-5">
               <ion-icon
                 name="file-tray-full-outline"
                 class="text-3xl"
@@ -109,7 +124,7 @@
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
             <a
-              href="addProduct.html"
+              href="addProduct.php"
               class="flex items-center justify-center p-5"
             >
               <ion-icon name="create-outline" class="text-3xl"></ion-icon>
@@ -118,7 +133,7 @@
           <li
             class="bg-secondary bg-opacity-75 border-t-4 border-compliment w-1/4 h-16 flex justify-center items-center"
           >
-            <a href="account.html" class="flex items-center justify-center p-5">
+            <a href="account.php" class="flex items-center justify-center p-5">
               <ion-icon name="cafe" class="text-3xl"></ion-icon>
             </a>
           </li>
@@ -126,7 +141,7 @@
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
             <a
-              href="contactUs.html"
+              href="contactUs.php"
               class="flex items-center justify-center p-5"
             >
               <ion-icon name="chatbubbles-outline" class="text-3xl"></ion-icon>
@@ -162,18 +177,24 @@
             <div class="username mb-4">
               <h2 class="text-bone font-semibold md:text-xl">Username</h2>
               <h3 class="text-bone text-sm md:text-lg md:mb-2">
-                Username User
+                @<?php echo htmlspecialchars($username); ?>
               </h3>
             </div>
             <div class="email mb-4">
               <h2 class="text-bone font-semibold md:text-xl">Email</h2>
               <h3 class="text-bone text-sm md:text-lg md:mb-2">
-                email@gmail.com
+                <?php
+                  echo htmlspecialchars($email);
+                ?>
               </h3>
             </div>
             <div class="username mb-4">
               <h2 class="text-bone font-semibold md:text-xl">Bio</h2>
-              <h3 class="text-bone text-sm md:text-lg md:mb-2">-</h3>
+              <h3 class="text-bone text-sm md:text-lg md:mb-2">
+                <?php
+                  echo !empty($user_bio) ? htmlspecialchars($user_bio) : "-";
+                ?>
+              </h3>
             </div>
             <button
               type="submit"

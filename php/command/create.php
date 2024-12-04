@@ -45,3 +45,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     createItem($pdo, $uid, $name, $category, $quantity, $price);
     // createCategory($pdo, $uid, $newCategory);
 }
+?>

@@ -8,7 +8,7 @@
 
     $username = $_SESSION['username'];
 
-    require 'connect.php';
+    require 'config/conn.php';
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +50,7 @@
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="index.html" class="p-4 flex items-center">
+            <a href="index.php" class="p-4 flex items-center">
               <ion-icon
                 name="file-tray-full-outline"
                 class="text-2xl ml-3 mr-10"
@@ -61,7 +61,7 @@
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="addProduct.html" class="p-4 flex items-center">
+            <a href="addProduct.php" class="p-4 flex items-center">
               <ion-icon
                 name="create-outline"
                 class="text-2xl ml-3 mr-10"
@@ -72,7 +72,7 @@
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="account.html" class="p-4 flex items-center">
+            <a href="account.php" class="p-4 flex items-center">
               <ion-icon
                 name="cafe-outline"
                 class="text-2xl ml-3 mr-10"
@@ -81,7 +81,7 @@
             </a>
           </li>
           <li class="bg-secondary bg-opacity-75 border-r-4 border-compliment">
-            <a href="contactUs.html" class="p-4 flex items-center">
+            <a href="contactUs.php" class="p-4 flex items-center">
               <ion-icon
                 name="chatbubbles"
                 class="text-2xl ml-3 mr-10"
@@ -101,7 +101,7 @@
           <li
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
-            <a href="index.html" class="flex items-center justify-center p-5">
+            <a href="index.php" class="flex items-center justify-center p-5">
               <ion-icon
                 name="file-tray-full-outline"
                 class="text-3xl"
@@ -112,7 +112,7 @@
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
             <a
-              href="addProduct.html"
+              href="addProduct.php"
               class="flex items-center justify-center p-5"
             >
               <ion-icon name="create-outline" class="text-3xl"></ion-icon>
@@ -121,7 +121,7 @@
           <li
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
-            <a href="account.html" class="flex items-center justify-center p-5">
+            <a href="account.php" class="flex items-center justify-center p-5">
               <ion-icon name="cafe-outline" class="text-3xl"></ion-icon>
             </a>
           </li>
@@ -129,7 +129,7 @@
             class="bg-secondary bg-opacity-75 border-t-4 border-compliment w-1/4 h-16 flex justify-center items-center"
           >
             <a
-              href="contactUs.html"
+              href="contactUs.php"
               class="flex items-center justify-center p-5"
             >
               <ion-icon name="chatbubbles" class="text-3xl"></ion-icon>

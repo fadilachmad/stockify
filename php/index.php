@@ -1,48 +1,48 @@
 <?php
 session_start();
 
-if (!isset($_SESSION["login"])) {
-    header("Location: login.php");
-    exit;
-};
+if (!isset($_SESSION["login"]) || !$_SESSION["login"]) {
+  header("Location: login.php");
+  exit;
+}
 
-$username = $_SESSION['username'];
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
 
-include 'php/config/conn.php';
+include 'config/conn.php';
 
 // Query untuk mendapatkan data dari tabel 'product'
 
 
 // Hitung total produk (jumlah semua name)
 $totalProductQuery = "SELECT COUNT(name) AS total_product FROM product";
-$totalProductResult = $conn->query($totalProductQuery);
-$totalProduct = $totalProductResult->fetch_assoc()['total_product'];
+$totalProductResult = $pdo->query($totalProductQuery);
+$totalProduct = $totalProductResult->fetch(PDO::FETCH_ASSOC)['total_product'];
 
 // Hitung total value (price * quantity)
 $totalValueQuery = "SELECT SUM(price * quantity) AS total_value FROM product";
-$totalValueResult = $conn->query($totalValueQuery);
-$totalValue = $totalValueResult->fetch_assoc()['total_value'];
+$totalValueResult = $pdo->query($totalValueQuery);
+$totalValue = $totalValueResult->fetch(PDO::FETCH_ASSOC)['total_value'];
 
 // Hitung total kategori unik
 $totalCategoryQuery = "SELECT COUNT(DISTINCT category) AS total_category FROM product";
-$totalCategoryResult = $conn->query($totalCategoryQuery);
-$totalCategory = $totalCategoryResult->fetch_assoc()['total_category'];
+$totalCategoryResult = $pdo->query($totalCategoryQuery);
+$totalCategory = $totalCategoryResult->fetch(PDO::FETCH_ASSOC)['total_category'];
 
 $sql = "SELECT * FROM product";
-$result = $conn->query($sql);
+$result = $pdo->query($sql);
 
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
 
     $delete_sql = "DELETE FROM product WHERE id = ?";
-    $stmt = $conn->prepare($delete_sql);
-    $stmt->bind_param("i", $delete_id);
+    $stmt = $pdo->prepare($delete_sql);
+    $stmt->bindValue(1, $delete_id, PDO::PARAM_INT);
 
     if ($stmt->execute()) {
         header("Location: index.php"); // Redirect ke halaman utama
         exit();
     } else {
-        echo "Gagal menghapus data: " . $conn->error;
+        echo "Gagal menghapus data: " . $stmt->errorInfo()[2];
     }
 }
 
@@ -96,7 +96,7 @@ if (isset($_GET['delete_id'])) {
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="addproduct.php" class="p-4 flex items-center">
+            <a href="addProduct.php" class="p-4 flex items-center">
               <ion-icon
                 name="create-outline"
                 class="text-2xl ml-3 mr-10"
@@ -107,7 +107,7 @@ if (isset($_GET['delete_id'])) {
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="account.html" class="p-4 flex items-center">
+            <a href="account.php" class="p-4 flex items-center">
               <ion-icon
                 name="cafe-outline"
                 class="text-2xl ml-3 mr-10"
@@ -118,7 +118,7 @@ if (isset($_GET['delete_id'])) {
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="contactUs.html" class="p-4 flex items-center">
+            <a href="contactUs.php" class="p-4 flex items-center">
               <ion-icon
                 name="chatbubbles-outline"
                 class="text-2xl ml-3 mr-10"
@@ -153,7 +153,7 @@ if (isset($_GET['delete_id'])) {
           <li
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
-            <a href="account.html" class="flex items-center justify-center p-5">
+            <a href="account.php" class="flex items-center justify-center p-5">
               <ion-icon name="cafe-outline" class="text-3xl"></ion-icon>
             </a>
           </li>
@@ -161,7 +161,7 @@ if (isset($_GET['delete_id'])) {
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
             <a
-              href="contactUs.html"
+              href="contactUs.php"
               class="flex items-center justify-center p-5"
             >
               <ion-icon name="chatbubbles-outline" class="text-3xl"></ion-icon>
@@ -259,9 +259,9 @@ if (isset($_GET['delete_id'])) {
             </thead>
             <tbody class="text-bone">
             <?php
-                if ($result->num_rows > 0) {
+                if ($result->rowCount() > 0) {
                     $no = 1; // Nomor urut
-                    while ($row = $result->fetch_assoc()) {
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         echo "<tr>";
                         echo "<td class='border text-xs md:text-base p-2'>{$no}</td>";
                         echo "<td class='border text-xs md:text-base p-2'>{$row['name']}</td>";
@@ -282,7 +282,7 @@ if (isset($_GET['delete_id'])) {
                 } else {
                     echo "<tr><td colspan='6' class='border text-center p-2'>No Data Available</td></tr>";
                 }
-                $conn->close();
+                $pdo = null;
             ?>
             </tbody>
           </table>

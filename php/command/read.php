@@ -17,3 +17,4 @@ function readProduct($pdo, $uid)
 
 $uid = $_POST["uid"];
 readProduct($pdo, $uid);
+?>

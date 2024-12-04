@@ -6,15 +6,14 @@
         exit;
     }
 
-    require 'connect.php';
-    require 'php/config/conn.php';
+    require 'config/conn.php';
 
     if (isset($_POST["login"])) {
         $email = $_POST["email"];
         $username = $_POST["username"];
         $password = $_POST["password"];
 
-        $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username OR email = :email");
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username OR email = :email");
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':email', $email);
         $stmt->execute();
@@ -28,9 +27,11 @@
             if (password_verify($password, $row["password"])) {
                 // Set session
                 $_SESSION["login"] = true;
-                header("Location: ../index.html");
+                $_SESSION["username"] = $row["username"]; // Use $row["username"] from the database
+                header("Location: index.php");
                 exit;
             }
+            
         }
 
         $error = true;

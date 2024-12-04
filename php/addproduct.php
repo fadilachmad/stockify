@@ -1,6 +1,14 @@
 <?php
+session_start();
 
-include 'php/config/conn.php';
+if (!isset($_SESSION["login"]) || !$_SESSION["login"]) {
+  header("Location: login.php");
+  exit;
+}
+
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
+
+include 'config/conn.php';
 
 // Proses penyimpanan data jika form disubmit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -12,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validasi sederhana
     if (!empty($name) && !empty($category) && !empty($price) && !empty($quantity)) {
-        $stmt = $conn->prepare("INSERT INTO product (name, category, price, quantity, description) VALUES (:name, :category, :price, :quantity, :description)");
+        $stmt = $pdo->prepare("INSERT INTO product (name, category, price, quantity, description) VALUES (:name, :category, :price, :quantity, :description)");
         $stmt->bindValue(':name', $name);
         $stmt->bindValue(':category', $category);
         $stmt->bindValue(':price', $price);
@@ -92,7 +100,7 @@ $conn = null;
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="account.html" class="p-4 flex items-center">
+            <a href="account.php" class="p-4 flex items-center">
               <ion-icon
                 name="cafe-outline"
                 class="text-2xl ml-3 mr-10"
@@ -103,7 +111,7 @@ $conn = null;
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="contactUs.html" class="p-4 flex items-center">
+            <a href="contactUs.php" class="p-4 flex items-center">
               <ion-icon
                 name="chatbubbles-outline"
                 class="text-2xl ml-3 mr-10"
@@ -143,7 +151,7 @@ $conn = null;
           <li
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
-            <a href="account.html" class="flex items-center justify-center p-5">
+            <a href="account.php" class="flex items-center justify-center p-5">
               <ion-icon name="cafe-outline" class="text-3xl"></ion-icon>
             </a>
           </li>
@@ -151,7 +159,7 @@ $conn = null;
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
             <a
-              href="contactUs.html"
+              href="contactUs.php"
               class="flex items-center justify-center p-5"
             >
               <ion-icon name="chatbubbles-outline" class="text-3xl"></ion-icon>
@@ -164,7 +172,9 @@ $conn = null;
       <!-- Main Content -->
       <main class="m-3 col-span-10">
         <header class="flex justify-between">
-          <h1 class="greet font-extrabold text-2xl text-bone">Hi, Username</h1>
+          <h1 class="greet font-extrabold text-2xl text-bone">
+            Hi, <?php echo htmlspecialchars($username); ?>!
+          </h1>
           <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
             Logout
           </button>
