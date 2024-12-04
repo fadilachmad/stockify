@@ -1,3 +1,44 @@
+<?php
+include 'connect.php';
+
+// Query untuk mendapatkan data dari tabel 'product'
+
+
+// Hitung total produk (jumlah semua name)
+$totalProductQuery = "SELECT COUNT(name) AS total_product FROM product";
+$totalProductResult = $conn->query($totalProductQuery);
+$totalProduct = $totalProductResult->fetch_assoc()['total_product'];
+
+// Hitung total value (price * quantity)
+$totalValueQuery = "SELECT SUM(price * quantity) AS total_value FROM product";
+$totalValueResult = $conn->query($totalValueQuery);
+$totalValue = $totalValueResult->fetch_assoc()['total_value'];
+
+// Hitung total kategori unik
+$totalCategoryQuery = "SELECT COUNT(DISTINCT category) AS total_category FROM product";
+$totalCategoryResult = $conn->query($totalCategoryQuery);
+$totalCategory = $totalCategoryResult->fetch_assoc()['total_category'];
+
+$sql = "SELECT * FROM product";
+$result = $conn->query($sql);
+
+if (isset($_GET['delete_id'])) {
+    $delete_id = $_GET['delete_id'];
+
+    $delete_sql = "DELETE FROM product WHERE id = ?";
+    $stmt = $conn->prepare($delete_sql);
+    $stmt->bind_param("i", $delete_id);
+
+    if ($stmt->execute()) {
+        header("Location: index.php"); // Redirect ke halaman utama
+        exit();
+    } else {
+        echo "Gagal menghapus data: " . $conn->error;
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -35,7 +76,7 @@
             Stockify
           </li>
           <li class="bg-secondary bg-opacity-75 border-r-4 border-compliment">
-            <a href="index.html" class="p-4 flex items-center">
+            <a href="index.php" class="p-4 flex items-center">
               <ion-icon
                 name="file-tray-full"
                 class="text-2xl ml-3 mr-10"
@@ -46,7 +87,7 @@
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="addProduct.html" class="p-4 flex items-center">
+            <a href="addproduct.php" class="p-4 flex items-center">
               <ion-icon
                 name="create-outline"
                 class="text-2xl ml-3 mr-10"
@@ -81,14 +122,12 @@
       <!-- End Sidebar -->
 
       <!-- Bottombar Mobile -->
-      <div
-        class="bottombar fixed bg-bone bottom-0 right-0 left-0 w-screen md:hidden"
-      >
+      <div class="bottombar fixed bg-bone bottom-0 right-0 left-0 w-screen md:hidden">
         <ul class="flex">
           <li
             class="bg-secondary bg-opacity-75 border-t-4 border-compliment w-1/4 h-16 flex justify-center items-center"
           >
-            <a href="index.html" class="flex items-center justify-center p-5">
+            <a href="index.php" class="flex items-center justify-center p-5">
               <ion-icon name="file-tray-full" class="text-3xl"></ion-icon>
             </a>
           </li>
@@ -96,7 +135,7 @@
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
             <a
-              href="addProduct.html"
+              href="addproduct.php"
               class="flex items-center justify-center p-5"
             >
               <ion-icon name="create-outline" class="text-3xl"></ion-icon>
@@ -141,7 +180,7 @@
             ></ion-icon>
             <div class="text">
               <h2 class="text-sm font-medium md:text-xl">Total Product</h2>
-              <p class="font-extrabold text-xl -mt-1 md:text-3xl">5</p>
+              <p class="font-extrabold text-xl -mt-1 md:text-3xl"><?php echo $totalProduct; ?></p>
             </div>
           </div>
           <div class="card bg-secondary text-primary flex items-center mt-2">
@@ -152,7 +191,7 @@
             <div class="text">
               <h2 class="text-sm font-medium md:text-xl">Total Value</h2>
               <p class="font-extrabold text-xl -mt-1 md:text-3xl">
-                Rp. 35,000,000
+                Rp. <?php echo number_format($totalValue, 0, ',', '.'); ?>
               </p>
             </div>
           </div>
@@ -163,7 +202,7 @@
             ></ion-icon>
             <div class="text">
               <h2 class="text-sm font-medium md:text-xl">Total Category</h2>
-              <p class="font-extrabold text-xl -mt-1 md:text-3xl">2</p>
+              <p class="font-extrabold text-xl -mt-1 md:text-3xl"><?php echo $totalCategory; ?></p>
             </div>
           </div>
         </section>
@@ -206,24 +245,32 @@
               </tr>
             </thead>
             <tbody class="text-bone">
-              <tr>
-                <td class="border text-xs md:text-base p-2" id="no">1</td>
-                <td class="border text-xs md:text-base p-2" id="name">
-                  Product 1
-                </td>
-                <td class="border text-xs md:text-base p-2" id="category">
-                  Category 1
-                </td>
-                <td class="border text-xs md:text-base p-2" id="price">
-                  Rp. 100000
-                </td>
-                <td class="border text-xs md:text-base p-2" id="quantity">
-                  10
-                </td>
-                <td class="border text-xs md:text-base p-2" id="action">
-                  Edit
-                </td>
-              </tr>
+            <?php
+                if ($result->num_rows > 0) {
+                    $no = 1; // Nomor urut
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td class='border text-xs md:text-base p-2'>{$no}</td>";
+                        echo "<td class='border text-xs md:text-base p-2'>{$row['name']}</td>";
+                        echo "<td class='border text-xs md:text-base p-2'>{$row['category']}</td>";
+                        echo "<td class='border text-xs md:text-base p-2'>Rp. " . number_format($row['price'], 0, ',', '.') . "</td>";
+                        echo "<td class='border text-xs md:text-base p-2'>{$row['quantity']}</td>";
+                        echo "<td class='border text-xs md:text-base p-2'>
+                                <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm'>
+                                  <a href='update.php?id={$row['id']}'><ion-icon name='pencil-outline'></ion-icon></a>
+                                </button>
+                                <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm'>
+                                  <a href='index.php?delete_id={$row['id']}' onclick='return confirm('Apakah Anda yakin ingin menghapus produk ini?')'><ion-icon name='trash-outline'></ion-icon></a>
+                                </button>
+                        </td>";
+                        echo "</tr>";
+                        $no++;
+                    }
+                } else {
+                    echo "<tr><td colspan='6' class='border text-center p-2'>No Data Available</td></tr>";
+                }
+                $conn->close();
+            ?>
             </tbody>
           </table>
         </div>
