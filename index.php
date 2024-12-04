@@ -257,10 +257,10 @@ if (isset($_GET['delete_id'])) {
                         echo "<td class='border text-xs md:text-base p-2'>{$row['quantity']}</td>";
                         echo "<td class='border text-xs md:text-base p-2'>
                                 <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm'>
-                                  <a href='update.php?id={$row['id']}'>Edit</a>
+                                  <a href='update.php?id={$row['id']}'><ion-icon name='pencil-outline'></ion-icon></a>
                                 </button>
                                 <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm'>
-                                  <a href='index.php?delete_id={$row['id']}' onclick='return confirm('Apakah Anda yakin ingin menghapus produk ini?')'>Del</a>
+                                  <a href='index.php?delete_id={$row['id']}' onclick='return confirm('Apakah Anda yakin ingin menghapus produk ini?')'><ion-icon name='trash-outline'></ion-icon></a>
                                 </button>
                         </td>";
                         echo "</tr>";
