@@ -30,7 +30,7 @@ if (isset($_GET['delete_id'])) {
     $stmt->bind_param("i", $delete_id);
 
     if ($stmt->execute()) {
-        header("Location: inventory.php"); // Redirect ke halaman utama
+        header("Location: index.php"); // Redirect ke halaman utama
         exit();
     } else {
         echo "Gagal menghapus data: " . $conn->error;
@@ -260,7 +260,7 @@ if (isset($_GET['delete_id'])) {
                                   <a href='update.php?id={$row['id']}'>Edit</a>
                                 </button>
                                 <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm'>
-                                  <a href='inventory.php?delete_id={$row['id']}' onclick='return confirm('Apakah Anda yakin ingin menghapus produk ini?')'>Delete</a>
+                                  <a href='index.php?delete_id={$row['id']}' onclick='return confirm('Apakah Anda yakin ingin menghapus produk ini?')'>Del</a>
                                 </button>
                         </td>";
                         echo "</tr>";
