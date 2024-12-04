@@ -61,4 +61,20 @@ function signup($data) {
         return false;
     }
 }
+
+function search($keyword) {
+    global $pdo;
+    $sql = "SELECT * FROM product 
+            WHERE LOWER(name) LIKE LOWER(:keyword) 
+            OR LOWER(category) LIKE LOWER(:keyword) 
+            OR LOWER(CAST(price AS TEXT)) LIKE LOWER(:keyword) 
+            OR LOWER(CAST(quantity AS TEXT)) LIKE LOWER(:keyword) 
+            OR LOWER(description) LIKE LOWER(:keyword)";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':keyword', '%' . $keyword . '%', PDO::PARAM_STR);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 ?>

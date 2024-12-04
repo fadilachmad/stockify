@@ -9,6 +9,19 @@ if (!isset($_SESSION["login"]) || !$_SESSION["login"]) {
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
 
 include 'config/conn.php';
+require 'functions.php';
+
+if (isset($_POST["search"])) {
+  $keyword = trim($_POST["keyword"]); // ngilangin spasi
+  if (!empty($keyword)) {
+      $product = search($keyword) ?? [];
+  } else {
+      $product = [];
+  }
+} else {
+  $sql = "SELECT * FROM product";
+  $product = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
 
 // Query untuk mendapatkan data dari tabel 'product'
 
@@ -28,8 +41,17 @@ $totalCategoryQuery = "SELECT COUNT(DISTINCT category) AS total_category FROM pr
 $totalCategoryResult = $pdo->query($totalCategoryQuery);
 $totalCategory = $totalCategoryResult->fetch(PDO::FETCH_ASSOC)['total_category'];
 
-$sql = "SELECT * FROM product";
-$result = $pdo->query($sql);
+if (isset($_POST["search"]) && !empty($_POST["keyword"])) {
+  $keyword = trim($_POST["keyword"]);
+  $sql = "SELECT * FROM product WHERE LOWER(name) LIKE LOWER(:keyword)";
+  $stmt = $pdo->prepare($sql);
+  $stmt->bindValue(':keyword', $keyword, PDO::PARAM_STR);
+  $stmt->execute();
+  $result = $stmt;
+} else {
+  $sql = "SELECT * FROM product";
+  $result = $pdo->query($sql);
+}
 
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
@@ -228,14 +250,20 @@ if (isset($_GET['delete_id'])) {
               <ion-icon name="funnel-outline"></ion-icon>
               <p class="ml-2">Default</p>
             </button>
-            <input
-              type="text"
-              class="rounded-full px-2 py-1 text-primary text-xs placeholder:text-primary placeholder:text-xs focus:outline-none md:text-base md:placeholder:text-base"
-              placeholder="Search items..."
-            />
+
+            <form action="" method="post">
+              <b action="" method="post">
+                <input
+                  type="text" name="keyword" id="keyword"
+                  class="rounded-full px-2 py-1 text-primary text-xs placeholder:text-primary placeholder:text-xs focus:outline-none md:text-base md:placeholder:text-base"
+                  placeholder="Search items..." autofocus autocomplete="off"
+                />
+              </b>
+            </form>
+
           </div>
         </div>
-        <div class="data overflow-auto">
+        <div class="data overflow-auto" id="container">
           <table class="mt-3 w-full">
             <thead>
               <tr class="bg-compliment border-bone">
@@ -258,33 +286,32 @@ if (isset($_GET['delete_id'])) {
               </tr>
             </thead>
             <tbody class="text-bone">
-            <?php
-                if ($result->rowCount() > 0) {
-                    $no = 1; // Nomor urut
-                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                        echo "<tr>";
-                        echo "<td class='border text-xs md:text-base p-2'>{$no}</td>";
-                        echo "<td class='border text-xs md:text-base p-2'>{$row['name']}</td>";
-                        echo "<td class='border text-xs md:text-base p-2'>{$row['category']}</td>";
-                        echo "<td class='border text-xs md:text-base p-2'>Rp. " . number_format($row['price'], 0, ',', '.') . "</td>";
-                        echo "<td class='border text-xs md:text-base p-2'>{$row['quantity']}</td>";
-                        echo "<td class='border text-xs md:text-base p-2'>
-                                <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm'>
-                                  <a href='update.php?id={$row['id']}'><ion-icon name='pencil-outline'></ion-icon></a>
-                                </button>
-                                <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm'>
-                                  <a href='index.php?delete_id={$row['id']}' onclick='return confirm('Apakah Anda yakin ingin menghapus produk ini?')'><ion-icon name='trash-outline'></ion-icon></a>
-                                </button>
-                        </td>";
-                        echo "</tr>";
-                        $no++;
-                    }
-                } else {
-                    echo "<tr><td colspan='6' class='border text-center p-2'>No Data Available</td></tr>";
-                }
-                $pdo = null;
-            ?>
-            </tbody>
+              <?php
+                  if (count($product) > 0) {
+                      $no = 1; // Nomor urut
+                      foreach ($product as $row) {
+                          echo "<tr>";
+                          echo "<td class='border text-xs md:text-base p-2'>{$no}</td>";
+                          echo "<td class='border text-xs md:text-base p-2'>{$row['name']}</td>";
+                          echo "<td class='border text-xs md:text-base p-2'>{$row['category']}</td>";
+                          echo "<td class='border text-xs md:text-base p-2'>Rp. " . number_format($row['price'], 0, ',', '.') . "</td>";
+                          echo "<td class='border text-xs md:text-base p-2'>{$row['quantity']}</td>";
+                          echo "<td class='border text-xs md:text-base p-2'>
+                                  <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm'>
+                                    <a href='update.php?id={$row['id']}'><ion-icon name='pencil-outline'></ion-icon></a>
+                                  </button>
+                                  <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm'>
+                                    <a href='index.php?delete_id={$row['id']}' onclick='return confirm(\"Apakah Anda yakin ingin menghapus produk ini?\")'><ion-icon name='trash-outline'></ion-icon></a>
+                                  </button>
+                              </td>";
+                          echo "</tr>";
+                          $no++;
+                      }
+                  } else {
+                      echo "<tr><td colspan='6' class='border text-center p-2'>No Data Available</td></tr>";
+                  }
+              ?>
+              </tbody>
           </table>
         </div>
       </main>
@@ -299,5 +326,7 @@ if (isset($_GET['delete_id'])) {
       nomodule
       src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.js"
     ></script>
+
+    <script src="../js/script.js"></script>
   </body>
 </html>

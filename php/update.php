@@ -194,7 +194,7 @@ $pdo = null;
             <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
                 Logout
             </button>
-        </a>
+          </a>
         </header>
 
         <div class="menu-info mt-1">
