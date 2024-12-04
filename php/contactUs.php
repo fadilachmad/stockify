@@ -69,18 +69,21 @@
               <p>Add Product</p>
             </a>
           </li>
-          <li class="bg-secondary bg-opacity-75 border-r-4 border-compliment">
-            <a href="account.html" class="p-4 flex items-center">
-              <ion-icon name="cafe" class="text-2xl ml-3 mr-10"></ion-icon>
-              <p>Account</p>
-            </a>
-          </li>
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
+            <a href="account.html" class="p-4 flex items-center">
+              <ion-icon
+                name="cafe-outline"
+                class="text-2xl ml-3 mr-10"
+              ></ion-icon>
+              <p>Account</p>
+            </a>
+          </li>
+          <li class="bg-secondary bg-opacity-75 border-r-4 border-compliment">
             <a href="contactUs.html" class="p-4 flex items-center">
               <ion-icon
-                name="chatbubbles-outline"
+                name="chatbubbles"
                 class="text-2xl ml-3 mr-10"
               ></ion-icon>
               <p>Contact Us</p>
@@ -116,20 +119,20 @@
             </a>
           </li>
           <li
-            class="bg-secondary bg-opacity-75 border-t-4 border-compliment w-1/4 h-16 flex justify-center items-center"
+            class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
             <a href="account.html" class="flex items-center justify-center p-5">
-              <ion-icon name="cafe" class="text-3xl"></ion-icon>
+              <ion-icon name="cafe-outline" class="text-3xl"></ion-icon>
             </a>
           </li>
           <li
-            class="border-compliment w-1/4 h-16 flex justify-center items-center"
+            class="bg-secondary bg-opacity-75 border-t-4 border-compliment w-1/4 h-16 flex justify-center items-center"
           >
             <a
               href="contactUs.html"
               class="flex items-center justify-center p-5"
             >
-              <ion-icon name="chatbubbles-outline" class="text-3xl"></ion-icon>
+              <ion-icon name="chatbubbles" class="text-3xl"></ion-icon>
             </a>
           </li>
         </ul>
@@ -142,46 +145,59 @@
           <h1 class="greet font-extrabold text-2xl text-bone">
             Hi, <?php echo htmlspecialchars($username); ?>!
           </h1>
-          <a href="logout.php">
-            <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
-                Logout
-            </button>
-          </a>
+          <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
+            Logout
+          </button>
         </header>
 
-        <div
-          class="menu-info mt-3 flex flex-wrap justify-center md:justify-start"
-        >
-          <div class="profile bg-compliment rounded-sm size-64 flex">
-            <ion-icon
-              name="person-circle"
-              class="size-full text-primary"
-            ></ion-icon>
-          </div>
-          <div class="info md:mx-4 mr-auto pl-2 mt-2 mb-20 ml-2">
-            <div class="username mb-4">
-              <h2 class="text-bone font-semibold md:text-xl">Username</h2>
-              <h3 class="text-bone text-sm md:text-lg md:mb-2">
-                Username User
-              </h3>
+        <div class="menu-info mt-2">
+          <h2 class="text-bone md:text-xl">Your reviews are important to us</h2>
+          <h2 class="text-bone md:text-xl md:mb-2">
+            Feel free to send us a message.
+          </h2>
+          <div class="contact mt-2">
+            <div class="text mb-5">
+              <h2 class="text-bone font-semibold md:text-xl">
+                Contact Information
+              </h2>
+              <div class="call flex items-center mb-1">
+                <ion-icon
+                  name="call-outline"
+                  class="text-compliment mr-2"
+                ></ion-icon>
+                <h3 class="text-bone text-sm md:text-lg">+62 123 456 789</h3>
+              </div>
+              <div class="mail flex items-center mb-1">
+                <ion-icon
+                  name="mail-outline"
+                  class="text-compliment mr-2"
+                ></ion-icon>
+                <h3 class="text-bone text-sm md:text-lg">stockify@gmail.com</h3>
+              </div>
+              <div class="location flex items-center mb-1">
+                <ion-icon
+                  name="location-outline"
+                  class="text-compliment mr-2"
+                ></ion-icon>
+                <h3 class="text-bone text-sm md:text-lg">Medan, Indonesia</h3>
+              </div>
             </div>
-            <div class="email mb-4">
-              <h2 class="text-bone font-semibold md:text-xl">Email</h2>
-              <h3 class="text-bone text-sm md:text-lg md:mb-2">
-                email@gmail.com
-              </h3>
-            </div>
-            <div class="username mb-4">
-              <h2 class="text-bone font-semibold md:text-xl">Bio</h2>
-              <h3 class="text-bone text-sm md:text-lg md:mb-2">-</h3>
-            </div>
-            <button
-              type="submit"
-              class="bg-bone text-primary text-xs py-2 px-4 rounded-sm md:text-base flex items-center justify-between hover:bg-slate-200"
-            >
-              <ion-icon name="pencil"></ion-icon>
-              <p class="ml-2">Edit Profile</p>
-            </button>
+            <form action="" method="post">
+              <textarea
+                name="description"
+                id="description"
+                class="bg-compliment mb-2 text-bone text-xs h-32 md:h-64 w-full md:w-1/2 p-3 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
+                placeholder="Message..."
+              ></textarea>
+
+              <button
+                type="submit"
+                class="bg-bone text-primary text-xs py-2 px-4 rounded-sm md:text-base flex items-center justify-between hover:bg-slate-200"
+              >
+                <p>Send</p>
+                <ion-icon name="send-outline" class="ml-2"></ion-icon>
+              </button>
+            </form>
           </div>
         </div>
       </main>

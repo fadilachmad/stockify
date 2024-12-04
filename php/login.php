@@ -13,13 +13,17 @@
         $username = $_POST["username"];
         $password = $_POST["password"];
 
-        mysqli_query($conn, "SELECT * FROM users WHERE username = '$username' OR email = '$email'");
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username OR email = :email");
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Cek email
-        if (mysqli_num_rows($result) === 1) {
+        if (count($result) === 1) {
 
             // Cek password
-            $row = mysqli_fetch_assoc($result);
+            $row = $result[0];
             if (password_verify($password, $row["password"])) {
                 // Set session
                 $_SESSION["login"] = true;
@@ -62,6 +66,10 @@
             </li>
             <li>
                 <button type="submit" name="login">Log-In</button>
+            </li>
+            <li>
+                <p>Belum memiliki akun? Klik </p>
+                <a href="signup.php" style="text-decoration: none; cursor: pointer;">Daftar</a>
             </li>
         </ul>
     </form>

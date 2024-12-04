@@ -2,15 +2,22 @@
     require 'functions.php';
 
     if (isset($_POST["signup"])) {
-        if (signup($_POST) > 0) {
-            echo "<script>
-                    alert ('Successfully added new user.');
-                </script>";
-        } else {
-            echo mysqli_error($conn);
+        try {
+            if (signup($_POST) > 0) {
+                echo "<script>
+                        alert('Successfully added new user.');
+                    </script>";
+            } else {
+                echo "<script>
+                        alert('Failed to add new user.');
+                    </script>";
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
         }
     }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

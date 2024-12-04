@@ -6,11 +6,11 @@
     $port = '6543';
     $dbname = 'postgres';
 
-    $conn = new mysqli($host, $user, $password, $dbname);
-
-    if ($conn -> connect_error) {
-        die ("Connection Failed: ". $conn -> connect_error);
-    } else {
-        echo "Connection Success.";
+    try {
+        $conn = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        die("Database connection failed: " . $e->getMessage());
     }
 ?>

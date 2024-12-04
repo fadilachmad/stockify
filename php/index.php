@@ -4,7 +4,9 @@
     if (!isset($_SESSION["login"])) {
         header("Location: login.php");
         exit;
-    }
+    };
+
+    $username = $_SESSION['username'];
 ?>
 
 <!DOCTYPE html>
@@ -135,10 +137,14 @@
       <!-- Main Content -->
       <main class="m-3 col-span-10 overflow-auto">
         <header class="flex justify-between">
-          <h1 class="greet font-extrabold text-2xl text-bone">Hi, Username</h1>
-          <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
-            Logout
-          </button>
+          <h1 class="greet font-extrabold text-2xl text-bone">
+            Hi, <?php echo htmlspecialchars($username); ?>!
+          </h1>
+          <a href="logout.php">
+            <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
+                Logout
+            </button>
+          </a>
         </header>
         <section class="mt-1 md:grid grid-cols-3 gap-3">
           <div

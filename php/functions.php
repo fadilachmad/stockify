@@ -1,47 +1,68 @@
 <?php
-    require 'connect.php';
+require 'connect.php';
 
-    function signup($data) {
-        global $conn;
+function signup($data) {
+    global $conn;
 
-        $email = strtolower(stripslashes($data["email"]));
-        $username = strtolower(stripslashes($data["username"]));
-        $password = mysqli_real_escape_string($conn, $data["password"]);
-        $password2 = mysqli_real_escape_string($conn, $data["password2"]);
+    // Ambil dan sanitasi input
+    $email = strtolower(stripslashes($data["email"]));
+    $username = strtolower(stripslashes($data["username"]));
+    $password = $data["password"];
+    $confirmPassword = $data["confirmPassword"];
 
-        // Cek email dan username sudah ada atau belum
-        $result = mysqli_query($conn, "SELECT email FROM users WHERE email = '$email'");
+    // Cek apakah email sudah terdaftar
+    $stmt = $conn->prepare("SELECT email FROM users WHERE email = :email");
+    $stmt->bindParam(':email', $email);
+    $stmt->execute();
+    $result = $stmt->fetch();
 
-        if (mysqli_fetch_assoc ($result)) {
-            echo "<script>
-                    alert('Email already registered.');
-                </script>";
-            return false;
-        }
-
-        $result = mysqli_query($conn, "SELECT username FROM users WHERE username = '$username'");
-
-        if (mysqli_fetch_assoc ($result)) {
-            echo "<script>
-                    alert('Username already registered.');
-                </script>";
-            return false;
-        }
-
-        // Cek konfirmasi password
-        if ($password !== $password2) {
-            echo "<script>
-                    alert('Password doesn't match.');
-                </script>";
-            return false;
-        }
-
-        // Enkripsi password
-        $password = password_hash($password, PASSWORD_DEFAULT);
-
-        // Tambahkan user baru ke database
-        mysqli_query($conn, "INSERT INTO users VALUES ('', '$email', '$username', '$password')");
-
-        return mysqli_affected_rows($conn);
+    if ($result) {
+        echo "<script>
+                alert('Email already registered.');
+            </script>";
+        return false;
     }
+
+    // Cek apakah username sudah terdaftar
+    $stmt = $conn->prepare("SELECT username FROM users WHERE username = :username");
+    $stmt->bindParam(':username', $username);
+    $stmt->execute();
+    $result = $stmt->fetch();
+
+    if ($result) {
+        echo "<script>
+                alert('Username already registered.');
+            </script>";
+        return false;
+    }
+
+    // Cek apakah password dan konfirmasi password cocok
+    if ($password !== $confirmPassword) {
+        echo "<script>
+                alert('Passwords do not match.');
+            </script>";
+        return false;
+    }
+
+    // Enkripsi password
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    // Tambahkan user baru ke database
+    $stmt = $conn->prepare("INSERT INTO users (email, username, password) VALUES (:email, :username, :password)");
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':username', $username);
+    $stmt->bindParam(':password', $hashedPassword);
+
+    if ($stmt->execute()) {
+        echo "<script>
+                alert('User registered successfully!');
+            </script>";
+        return true;
+    } else {
+        echo "<script>
+                alert('Registration failed.');
+            </script>";
+        return false;
+    }
+}
 ?>
