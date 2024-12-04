@@ -1,4 +1,12 @@
 <?php
+session_start();
+
+if (!isset($_SESSION["login"]) || !$_SESSION["login"]) {
+  header("Location: login.php");
+  exit;
+}
+
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
 
 include 'config/conn.php';
 
@@ -179,10 +187,14 @@ $pdo = null;
       <!-- Main Content -->
       <main class="m-3 col-span-10">
         <header class="flex justify-between">
-          <h1 class="greet font-extrabold text-2xl text-bone">Hi, Username</h1>
-          <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
-            Logout
-          </button>
+          <h1 class="greet font-extrabold text-2xl text-bone">
+            Hi, <?php echo htmlspecialchars($username); ?>!
+          </h1>
+          <a href="logout.php">
+            <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
+                Logout
+            </button>
+        </a>
         </header>
 
         <div class="menu-info mt-1">

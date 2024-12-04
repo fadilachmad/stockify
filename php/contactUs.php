@@ -145,9 +145,11 @@
           <h1 class="greet font-extrabold text-2xl text-bone">
             Hi, <?php echo htmlspecialchars($username); ?>!
           </h1>
-          <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
-            Logout
-          </button>
+          <a href="logout.php">
+            <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
+                Logout
+            </button>
+          </a>
         </header>
 
         <div class="menu-info mt-2">
