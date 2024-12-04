@@ -1,6 +1,6 @@
 <?php
 
-include 'connect.php';
+include 'php/config/conn.php';
 
 // Proses penyimpanan data jika form disubmit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

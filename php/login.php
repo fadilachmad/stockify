@@ -1,5 +1,5 @@
 <?php 
-    require 'connect.php';
+    require 'php/config/conn.php';
 
     if (isset($_POST["login"])) {
         $email = $_POST["email"];

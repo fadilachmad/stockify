@@ -1,5 +1,5 @@
 <?php
-    require 'connect.php';
+    require 'php/config/conn.php';
 
     function signup($data) {
         global $conn;

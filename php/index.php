@@ -1,5 +1,5 @@
 <?php
-include 'connect.php';
+include 'php/config/conn.php';
 
 // Query untuk mendapatkan data dari tabel 'product'
 

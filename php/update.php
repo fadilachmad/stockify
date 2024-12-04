@@ -1,6 +1,6 @@
 <?php
 
-include 'connect.php';
+include 'php/config/conn.php';
 
 // Ambil data berdasarkan ID
 $id = $_GET['id'];

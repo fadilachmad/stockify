@@ -1,5 +1,5 @@
 <?php
-include '../config/conn.php';
+include 'php/config/conn.php';
 
 function readProduct($pdo, $uid)
 {
