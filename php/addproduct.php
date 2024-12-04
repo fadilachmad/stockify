@@ -1,22 +1,8 @@
 <?php
 
-include 'connect.php';
+include 'php/config/conn.php';
 
-// Ambil data berdasarkan ID
-$id = $_GET['id'];
-$sql = "SELECT * FROM product WHERE id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    $product = $result->fetch_assoc();
-} else {
-    die("Produk tidak ditemukan.");
-}
-
-// Proses update data
+// Proses penyimpanan data jika form disubmit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
     $category = $_POST['category'];
@@ -26,24 +12,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validasi sederhana
     if (!empty($name) && !empty($category) && !empty($price) && !empty($quantity)) {
-        $sql_update = "UPDATE product SET name = ?, category = ?, price = ?, quantity = ?, description = ? WHERE id = ?";
-        $stmt_update = $conn->prepare($sql_update);
-        $stmt_update->bind_param("ssdisi", $name, $category, $price, $quantity, $description, $id);
+        $stmt = $conn->prepare("INSERT INTO product (name, category, price, quantity, description) VALUES (:name, :category, :price, :quantity, :description)");
+        $stmt->bindValue(':name', $name);
+        $stmt->bindValue(':category', $category);
+        $stmt->bindValue(':price', $price);
+        $stmt->bindValue(':quantity', $quantity);
+        $stmt->bindValue(':description', $description);
 
-        if ($stmt_update->execute()) {
+        if ($stmt->execute()) {
+            // Redirect ke halaman inventory setelah berhasil
             header("Location: index.php");
             exit();
         } else {
-            echo "Gagal memperbarui data: " . $conn->error;
+            $errorInfo = $stmt->errorInfo();
+            echo "Gagal menyimpan data: " . $errorInfo[2];
         }
+
     } else {
         echo "Semua field harus diisi.";
     }
 }
 
-$conn->close();
+$conn = null;
 ?>
-
 
 <!DOCTYPE html>
 <html>
@@ -189,7 +180,6 @@ $conn->close();
               name="name"
               id="name"
               class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-1/2 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
-              value="<?= htmlspecialchars($product['name']); ?>"
               placeholder="Name"
             />
             <input
@@ -197,7 +187,7 @@ $conn->close();
               name="category"
               id="category"
               class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-1/2 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
-              value="<?= htmlspecialchars($product['category']); ?>"
+       
               placeholder="Category"
             />
             <input
@@ -205,7 +195,7 @@ $conn->close();
               name="price"
               id="price"
               class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-1/2 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
-              value="<?= htmlspecialchars($product['price']); ?>"
+
               placeholder="Price (Rp.)"
             />
             <input
@@ -213,7 +203,7 @@ $conn->close();
               name="quantity"
               id="quantity"
               class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-1/2 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
-              value="<?= htmlspecialchars($product['quantity']); ?>"
+
               placeholder="Quantity"
             />
             <textarea
@@ -221,7 +211,7 @@ $conn->close();
               id="description"
               class="bg-compliment mb-2 text-bone text-xs h-32 w-full md:w-1/2 p-3 md:h-40 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
               placeholder="Description"
-            ><?= htmlspecialchars($product['description']); ?></textarea>
+            ></textarea>
 
             <button
               type="submit"
