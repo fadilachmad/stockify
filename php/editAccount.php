@@ -1,29 +1,14 @@
-<?php
-    session_start();
+<?php 
+session_start();
 
-    if (!isset($_SESSION["login"])) {
-        header("Location: login.php");
-        exit;
-    }
+if (!isset($_SESSION["login"])) {
+    header("Location: login.php");
+    exit;
+}
 
-    $username = $_SESSION['username'];
+$username = $_SESSION['username'];
 
-    require 'config/conn.php';
-
-    $sql = "SELECT email, user_bio FROM users WHERE username = :username";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-    $stmt->execute();
-
-    if ($stmt->rowCount() > 0) {
-      $row = $stmt->fetch(PDO::FETCH_ASSOC);
-      $email = $row['email'];
-      $user_bio = $row['user_bio'];
-    } else {
-      echo "User data not found.";
-    }
-
-    $pdo = null;
+require 'config/conn.php';
 ?>
 
 <!DOCTYPE html>
@@ -56,7 +41,7 @@
   </head>
   <body class="bg-primary font-montserrat">
     <div class="content md:grid grid-cols-12">
-      <!-- Sidebar -->
+      
       <div class="sidebar col-span-2 hidden md:block bg-bone h-screen">
         <ul>
           <li class="font-extrabold text-compliment text-center my-4 text-xl">
@@ -103,9 +88,7 @@
           </li>
         </ul>
       </div>
-      <!-- End Sidebar -->
 
-      <!-- Bottombar Mobile -->
       <div
         class="bottombar fixed bg-bone bottom-0 right-0 left-0 w-screen md:hidden"
       >
@@ -149,19 +132,15 @@
           </li>
         </ul>
       </div>
-      <!-- End Bottombar Mobile -->
 
-      <!-- Main Content -->
       <main class="m-3 col-span-10">
         <header class="flex justify-between">
           <h1 class="greet font-extrabold text-2xl text-bone">
             Hi, <?php echo htmlspecialchars($username); ?>!
-          </h1>
-          <a href="logout.php">
-            <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
-                Logout
-            </button>
-          </a>
+        </h1>
+          <button class="bg-bone px-2 py-1 rounded-sm text-primary text-xs">
+            Logout
+          </button>
         </header>
 
         <div
@@ -173,40 +152,59 @@
               class="size-full text-primary"
             ></ion-icon>
           </div>
-          <div class="info md:mx-4 mr-auto pl-2 mt-2 mb-20 ml-2">
-            <div class="username mb-4">
-              <h2 class="text-bone font-semibold md:text-xl">Username</h2>
-              <h3 class="text-bone text-sm md:text-lg md:mb-2">
-                @<?php echo htmlspecialchars($username); ?>
-              </h3>
-            </div>
-            <div class="email mb-4">
-              <h2 class="text-bone font-semibold md:text-xl">Email</h2>
-              <h3 class="text-bone text-sm md:text-lg md:mb-2">
-                <?php
-                  echo htmlspecialchars($email);
-                ?>
-              </h3>
-            </div>
-            <div class="username mb-4">
-              <h2 class="text-bone font-semibold md:text-xl">Bio</h2>
-              <h3 class="text-bone text-sm md:text-lg md:mb-2">
-                <?php
-                  echo !empty($user_bio) ? htmlspecialchars($user_bio) : "-";
-                ?>
-              </h3>
-            </div>
-            <a 
-              href="editAccount.php" 
-              class="bg-bone text-primary text-xs py-2 px-4 rounded-sm md:text-base flex items-center justify-between hover:bg-slate-200"
-            >
-              <ion-icon name="pencil"></ion-icon>
-              <p class="ml-2">Edit Profile</p>
-            </a>
-          </div>
+<div class="info md:mx-4 mr-auto pl-2 mt-2 mb-20 ml-2">
+  <form action="">
+    <div class="username mb-4">
+      <h2 class="text-bone font-semibold md:text-xl">Username</h2>
+      <input
+        type="text"
+        name="name"
+        id="name"
+        class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-96 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
+        placeholder="Username"
+      />
+    </div>
+    <div class="email mb-4">
+      <h2 class="text-bone font-semibold md:text-xl">Email</h2>
+      <input
+        type="email"
+        name="email"
+        id="email"
+        class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-96 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
+        placeholder="email@gmail.com"
+      />
+    </div>
+    <div class="bio mb-4">
+      <h2 class="text-bone font-semibold md:text-xl">Bio</h2>
+      <textarea
+        name="bio"
+        id="bio"
+        class="bg-compliment mb-2 text-bone text-xs w-full md:w-96 p-3 md:h-24 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
+        placeholder="Write something about yourself..."
+      ></textarea>
+    </div>
+    <div class="btn-wrapper flex">
+      <button
+        type="reset"
+        class="bg-slate-300 mr-5 text-red-600 text-xs py-2 px-4 rounded-sm md:text-base flex items-center justify-between hover:bg-bone"
+        onclick="location.href='account.php'"
+      >
+        <ion-icon name="close-outline"></ion-icon>
+        <p class="ml-2">Cancel</p>
+      </button>
+      <button
+        type="submit"
+        class="bg-bone text-primary text-xs py-2 px-4 rounded-sm md:text-base flex items-center justify-between hover:bg-slate-200"
+        onclick="location.href='account.php'"
+      >
+        <ion-icon name="download"></ion-icon>
+        <p class="ml-2">Save Changes</p>
+      </button>
+    </div>
+  </form>
+</div>
         </div>
       </main>
-      <!-- End Main Content -->
     </div>
 
     <script

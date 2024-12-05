@@ -1,14 +1,18 @@
 <?php
 session_start();
 
-if (!isset($_SESSION["login"]) || !$_SESSION["login"]) {
+if (!isset($_SESSION["login"])) {
   header("Location: login.php");
   exit;
-}
+};
 
-$username = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
+$username = $_SESSION['username'];
 
 include 'config/conn.php';
+
+// if (!$conn) {
+//     die("Connection failed: " . mysqli_connect_error());
+// }
 
 // Proses penyimpanan data jika form disubmit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -20,22 +24,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validasi sederhana
     if (!empty($name) && !empty($category) && !empty($price) && !empty($quantity)) {
-        $stmt = $pdo->prepare("INSERT INTO product (name, category, price, quantity, description) VALUES (:name, :category, :price, :quantity, :description)");
-        $stmt->bindValue(':name', $name);
-        $stmt->bindValue(':category', $category);
-        $stmt->bindValue(':price', $price);
-        $stmt->bindValue(':quantity', $quantity);
-        $stmt->bindValue(':description', $description);
+        $stmt = $conn->prepare("INSERT INTO product (name, category, price, quantity, description) VALUES (?, ?, ?, ?, ?)");
+        if ($stmt) {
+            $quantity_float = (float)$quantity;
+            $stmt->execute([$name, $category, $price, $quantity_float, $description]);
 
-        if ($stmt->execute()) {
+        if ($stmt) {
             // Redirect ke halaman inventory setelah berhasil
             header("Location: index.php");
-            exit();
         } else {
-            $errorInfo = $stmt->errorInfo();
-            echo "Gagal menyimpan data: " . $errorInfo[2];
+            echo "Gagal menyimpan data: " . $conn->errorInfo()[2];
         }
-
+        } else {
+            echo "Failed to prepare statement: " . $conn->errorInfo()[2];
+        }
     } else {
         echo "Semua field harus diisi.";
     }
