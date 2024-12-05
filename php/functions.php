@@ -2,15 +2,14 @@
 require 'config/conn.php';
 
 function signup($data) {
-    global $pdo; // Use the correct variable from conn.php
+    global $pdo;
 
-    // Sanitize input
     $email = strtolower(trim($data["email"]));
     $username = strtolower(trim($data["username"]));
     $password = $data["password"];
     $confirmPassword = $data["confirmPassword"];
 
-    // Check if email already exists
+    // Cek email
     $stmt = $pdo->prepare("SELECT email FROM users WHERE email = :email");
     $stmt->bindParam(':email', $email);
     $stmt->execute();
@@ -21,7 +20,7 @@ function signup($data) {
         return false;
     }
 
-    // Check if username already exists
+    // Cek username
     $stmt = $pdo->prepare("SELECT username FROM users WHERE username = :username");
     $stmt->bindParam(':username', $username);
     $stmt->execute();
@@ -32,7 +31,7 @@ function signup($data) {
         return false;
     }
 
-    // Check if passwords match
+    // Cek password
     if ($password !== $confirmPassword) {
         echo "<script>
                 alert('Passwords do not match.');
@@ -40,10 +39,10 @@ function signup($data) {
         return false;
     }
 
-    // Hash the password
+    // Hash password
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Insert the new user into the database
+    // Insert user ke database
     $stmt = $pdo->prepare("INSERT INTO users (email, username, password) VALUES (:email, :username, :password)");
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':username', $username);
@@ -51,13 +50,13 @@ function signup($data) {
 
     if ($stmt->execute()) {
         echo "<script>
-                alert('User registered successfully!');
+                alert('Successfully added new user.');
             </script>";
         return true;
     } else {
-        echo "<script>
-                alert('Registration failed.');
-            </script>";
+        // echo "<script>
+        //         alert('Registration failed.');
+        //     </script>";
         return false;
     }
 }
