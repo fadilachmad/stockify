@@ -8,11 +8,11 @@ if (!isset($_SESSION["login"])) {
 
 $username = $_SESSION['username'];
 
-include 'config/conn.php';
+include 'connect.php';
 
-// if (!$conn) {
-//     die("Connection failed: " . mysqli_connect_error());
-// }
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
 
 // Proses penyimpanan data jika form disubmit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -102,7 +102,7 @@ $conn = null;
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="account.php" class="p-4 flex items-center">
+            <a href="account.html" class="p-4 flex items-center">
               <ion-icon
                 name="cafe-outline"
                 class="text-2xl ml-3 mr-10"
@@ -113,7 +113,7 @@ $conn = null;
           <li
             class="hover:border-b border-compliment hover:bg-secondary hover:bg-opacity-20"
           >
-            <a href="contactUs.php" class="p-4 flex items-center">
+            <a href="contactUs.html" class="p-4 flex items-center">
               <ion-icon
                 name="chatbubbles-outline"
                 class="text-2xl ml-3 mr-10"
@@ -153,7 +153,7 @@ $conn = null;
           <li
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
-            <a href="account.php" class="flex items-center justify-center p-5">
+            <a href="account.html" class="flex items-center justify-center p-5">
               <ion-icon name="cafe-outline" class="text-3xl"></ion-icon>
             </a>
           </li>
@@ -161,7 +161,7 @@ $conn = null;
             class="border-compliment w-1/4 h-16 flex justify-center items-center"
           >
             <a
-              href="contactUs.php"
+              href="contactUs.html"
               class="flex items-center justify-center p-5"
             >
               <ion-icon name="chatbubbles-outline" class="text-3xl"></ion-icon>
