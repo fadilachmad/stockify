@@ -228,11 +228,57 @@ if (isset($_GET['delete_id'])) {
       <div class="menu-info mt-3">
         <h2 class="text-bone font-semibold md:text-xl md:mb-2">Inventory</h2>
         <div class="feature flex items-center justify-between">
-          <button
-            class="bg-bone text-primary text-xs p-1 rounded-sm md:text-base flex items-center justify-between">
-            <ion-icon name="funnel-outline"></ion-icon>
-            <p class="ml-2">Default</p>
-          </button>
+        <div class="relative inline-block text-right">
+              <button
+                onclick="toggleDropdown()"
+                id="dropdownButton"
+                class="bg-bone text-primary text-xs p-1 rounded-sm md:text-base flex items-center justify-between"
+              >
+                <ion-icon name="funnel-outline"></ion-icon>
+                <p class="ml-2" id="dropdownButtonText">Default</p>
+              </button>
+
+              <!-- Dropdown Menu -->
+              <div
+                id="dropdownMenu"
+                class="absolute left-0 z-10 mt-2 md:w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-left hidden"
+              >
+                <div class="py-1" role="menu">
+                  <a
+                    href="?filter=default"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    role="menuitem"
+                    id="default"
+                  >
+                    Default
+                  </a>
+                  <a
+                    href="?filter=abjad"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    role="menuitem"
+                    id="abjad"
+                  >
+                    Abjad
+                  </a>
+                  <a
+                    href="?filter=harga"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    role="menuitem"
+                    id="harga"
+                  >
+                    Harga
+                  </a>
+                  <a
+                    href="?filter=kuantitas"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    role="menuitem"
+                    id="kuantitas"
+                  >
+                    Kuantitas
+                  </a>
+                </div>
+              </div>
+            </div>
 
           <form action="" method="post">
             <b action="" method="post">
@@ -349,7 +395,22 @@ if (isset($_GET['delete_id'])) {
     </main>
     <!-- End Main Content -->
   </div>
+  
+  <script>
+      function toggleDropdown() {
+        const menu = document.getElementById("dropdownMenu");
+        menu.classList.toggle("hidden");
+      }
 
+      // Menutup dropdown jika klik di luar
+      document.addEventListener("click", function (e) {
+        const button = document.getElementById("dropdownButton");
+        const menu = document.getElementById("dropdownMenu");
+        if (!button.contains(e.target)) {
+          menu.classList.add("hidden");
+        }
+      });
+    </script>
   <script
     type="module"
     src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
