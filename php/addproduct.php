@@ -2,48 +2,49 @@
 session_start();
 
 if (!isset($_SESSION["login"])) {
-  header("Location: login.php");
-  exit;
-};
+    header("Location: login.php");
+    exit;
+}
 
 $username = $_SESSION['username'];
 
-include 'connect.php';
-
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+include 'config/conn.php'; // This defines $pdo, not $conn
 
 // Proses penyimpanan data jika form disubmit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'];
-    $category = $_POST['category'];
-    $price = $_POST['price'];
-    $quantity = $_POST['quantity'];
-    $description = $_POST['description'];
+    $name = trim($_POST['name']);
+    $category = trim($_POST['category']);
+    $price = trim($_POST['price']);
+    $quantity = trim($_POST['quantity']);
+    $description = trim($_POST['description']);
 
     // Validasi sederhana
     if (!empty($name) && !empty($category) && !empty($price) && !empty($quantity)) {
-        $stmt = $conn->prepare("INSERT INTO product (name, category, price, quantity, description) VALUES (?, ?, ?, ?, ?)");
-        if ($stmt) {
-            $quantity_float = (float)$quantity;
-            $stmt->execute([$name, $category, $price, $quantity_float, $description]);
+        try {
+            // Prepare and execute the SQL statement using PDO
+            $stmt = $pdo->prepare("INSERT INTO product (name, category, price, quantity, description) VALUES (:name, :category, :price, :quantity, :description)");
+            
+            // Bind parameters
+            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+            $stmt->bindParam(':category', $category, PDO::PARAM_STR);
+            $stmt->bindParam(':price', $price, PDO::PARAM_STR);
+            $stmt->bindParam(':quantity', $quantity, PDO::PARAM_STR);
+            $stmt->bindParam(':description', $description, PDO::PARAM_STR);
 
-        if ($stmt) {
-            // Redirect ke halaman inventory setelah berhasil
-            header("Location: index.php");
-        } else {
-            echo "Gagal menyimpan data: " . $conn->errorInfo()[2];
-        }
-        } else {
-            echo "Failed to prepare statement: " . $conn->errorInfo()[2];
+            if ($stmt->execute()) {
+                // Redirect to the index page after successful submission
+                header("Location: index.php");
+                exit;
+            } else {
+                echo "Failed to save data: " . implode(", ", $stmt->errorInfo());
+            }
+        } catch (PDOException $e) {
+            echo "Database error: " . $e->getMessage();
         }
     } else {
-        echo "Semua field harus diisi.";
+        echo "All fields are required.";
     }
 }
-
-$conn = null;
 ?>
 
 <!DOCTYPE html>
@@ -94,7 +95,7 @@ $conn = null;
             </a>
           </li>
           <li class="bg-secondary bg-opacity-75 border-r-4 border-compliment">
-            <a href="addproduct.php" class="p-4 flex items-center">
+            <a href="addProduct.php" class="p-4 flex items-center">
               <ion-icon name="create" class="text-2xl ml-3 mr-10"></ion-icon>
               <p>Add Product</p>
             </a>
@@ -144,7 +145,7 @@ $conn = null;
             class="bg-secondary bg-opacity-75 border-t-4 border-compliment w-1/4 h-16 flex justify-center items-center"
           >
             <a
-              href="addproduct.php"
+              href="addProduct.php"
               class="flex items-center justify-center p-5"
             >
               <ion-icon name="create" class="text-3xl"></ion-icon>

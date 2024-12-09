@@ -107,7 +107,7 @@ $pdo = null;
             </a>
           </li>
           <li class="bg-secondary bg-opacity-75 border-r-4 border-compliment">
-            <a href="addproduct.php" class="p-4 flex items-center">
+            <a href="addProduct.php" class="p-4 flex items-center">
               <ion-icon name="create" class="text-2xl ml-3 mr-10"></ion-icon>
               <p>Add Product</p>
             </a>
@@ -157,7 +157,7 @@ $pdo = null;
             class="bg-secondary bg-opacity-75 border-t-4 border-compliment w-1/4 h-16 flex justify-center items-center"
           >
             <a
-              href="addproduct.php"
+              href="addProduct.php"
               class="flex items-center justify-center p-5"
             >
               <ion-icon name="create" class="text-3xl"></ion-icon>

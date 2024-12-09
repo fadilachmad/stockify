@@ -158,7 +158,7 @@ if (isset($_GET['delete_id'])) {
         <li
           class="border-compliment w-1/4 h-16 flex justify-center items-center">
           <a
-            href="addproduct.php"
+            href="addProduct.php"
             class="flex items-center justify-center p-5">
             <ion-icon name="create-outline" class="text-3xl"></ion-icon>
           </a>
