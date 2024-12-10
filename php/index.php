@@ -68,6 +68,58 @@ if (isset($_GET['delete_id'])) {
   }
 }
 
+// Pagination setup
+$limit = 5; // Jumlah data per halaman
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Halaman saat ini
+$offset = ($page - 1) * $limit; // Hitung offset
+
+// Query untuk mengambil total jumlah data
+$totalRowsQuery = "SELECT COUNT(*) as total FROM product";
+$totalRowsResult = $pdo->query($totalRowsQuery)->fetch(PDO::FETCH_ASSOC);
+$totalRows = $totalRowsResult['total'];
+$totalPages = ceil($totalRows / $limit); // Total halaman
+
+// Tangkap parameter filter dan pagination
+$filter = isset($_GET['filter']) ? $_GET['filter'] : 'default';
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+
+// Tentukan jumlah data per halaman
+$limit = 5;
+$offset = ($page - 1) * $limit;
+
+// Query dengan LIMIT dan OFFSET
+$sql = "SELECT * FROM product ";
+switch ($filter) {
+    case 'abjad':
+        $sql .= "ORDER BY name ASC ";
+        break;
+    case 'harga':
+        $sql .= "ORDER BY price ASC ";
+        break;
+    case 'kuantitas':
+        $sql .= "ORDER BY quantity DESC ";
+        break;
+    default:
+        $sql .= "ORDER BY id ASC ";
+        break;
+}
+$sql .= "LIMIT :limit OFFSET :offset";
+
+// Persiapkan dan eksekusi query
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$product = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Hitung total data untuk pagination
+$totalQuery = "SELECT COUNT(*) AS total FROM product";
+$totalResult = $pdo->query($totalQuery)->fetch(PDO::FETCH_ASSOC);
+$totalData = $totalResult['total'];
+
+// Hitung total halaman
+$totalPages = ceil($totalData / $limit);
+
 ?>
 
 <!DOCTYPE html>
@@ -97,6 +149,17 @@ if (isset($_GET['delete_id'])) {
       },
     };
   </script>
+  <style>
+.pagination a {
+  margin: 0 2px;
+  text-decoration: none;
+  font-size: 14px;
+}
+.pagination a:hover {
+  background-color: #ddd;
+}
+</style>
+
 </head>
 
 <body class="bg-primary font-montserrat">
@@ -235,7 +298,7 @@ if (isset($_GET['delete_id'])) {
                 class="bg-bone text-primary text-xs p-1 rounded-sm md:text-base flex items-center justify-between"
               >
                 <ion-icon name="funnel-outline"></ion-icon>
-                <p class="ml-2" id="dropdownButtonText">Default</p>
+                <p class="ml-2" id="dropdownButtonText">Filter</p>
               </button>
 
               <!-- Dropdown Menu -->
@@ -244,38 +307,39 @@ if (isset($_GET['delete_id'])) {
                 class="absolute left-0 z-10 mt-2 md:w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-left hidden"
               >
                 <div class="py-1" role="menu">
-                  <a
-                    href="?filter=default"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    role="menuitem"
-                    id="default"
-                  >
-                    Default
-                  </a>
-                  <a
-                    href="?filter=abjad"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    role="menuitem"
-                    id="abjad"
-                  >
-                    Abjad
-                  </a>
-                  <a
-                    href="?filter=harga"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    role="menuitem"
-                    id="harga"
-                  >
-                    Harga
-                  </a>
-                  <a
-                    href="?filter=kuantitas"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    role="menuitem"
-                    id="kuantitas"
-                  >
-                    Kuantitas
-                  </a>
+              <a
+                  href="?filter=default"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 <?= $filter === 'default' ? 'bg-gray-200 font-bold' : '' ?>"
+                  role="menuitem"
+                  id="default"
+              >
+                  Default
+              </a>
+              <a
+                  href="?filter=abjad"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 <?= $filter === 'abjad' ? 'bg-gray-200 font-bold' : '' ?>"
+                  role="menuitem"
+                  id="abjad"
+              >
+                  Abjad
+              </a>
+              <a
+                  href="?filter=harga"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 <?= $filter === 'harga' ? 'bg-gray-200 font-bold' : '' ?>"
+                  role="menuitem"
+                  id="harga"
+              >
+                  Harga
+              </a>
+              <a
+                  href="?filter=kuantitas"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 <?= $filter === 'kuantitas' ? 'bg-gray-200 font-bold' : '' ?>"
+                  role="menuitem"
+                  id="kuantitas"
+              >
+                  Kuantitas
+              </a>
+
                 </div>
               </div>
             </div>
@@ -317,38 +381,59 @@ if (isset($_GET['delete_id'])) {
             </tr>
           </thead>
           <tbody class="text-bone">
-            <?php
-            if (count($product) > 0) {
+          <?php
+          if (count($product) > 0) {
               $no = 1; // Nomor urut
               foreach ($product as $row) {
-                echo "<tr>";
-                echo "<td class='border text-xs md:text-base p-2'>{$no}</td>";
-                echo "<td class='border text-xs md:text-base p-2'>{$row['name']}</td>";
-                echo "<td class='border text-xs md:text-base p-2'>{$row['category']}</td>";
-                echo "<td class='border text-xs md:text-base p-2'>Rp. " . number_format($row['price'], 0, ',', '.') . "</td>";
-                echo "<td class='border text-xs md:text-base p-2'>{$row['quantity']}</td>";
-                echo "<td class='border text-xs md:text-base p-2'>{$row['unit']}</td>";
-                echo "
-                  <td class='border text-xs md:text-base p-2'>
-                        <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm' onclick='openEditForm(`{$row['id']}`, `{$row['name']}`, `{$row['category']}`, `{$row['price']}`, `{$row['quantity']}`, `{$row['unit']}`, `{$row['description']}`);'>
-                          <ion-icon name='information-circle-outline'></ion-icon>
-                        </button>
-                        <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm'>
-                          <a href='update.php?id={$row['id']}'><ion-icon name='pencil-outline'></ion-icon></a>
-                        </button>
-                        <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm'>
-                          <a href='index.php?delete_id={$row['id']}' onclick='return confirm(\"Apakah Anda yakin ingin menghapus produk ini?\")'><ion-icon name='trash-outline'></ion-icon></a>
-                        </button>
-                  </td>";
-                echo "</tr>";
-                $no++;
+                  echo "<tr>";
+                  echo "<td class='border text-xs md:text-base p-2'>{$no}</td>";
+                  echo "<td class='border text-xs md:text-base p-2'>{$row['name']}</td>";
+                  echo "<td class='border text-xs md:text-base p-2'>{$row['category']}</td>";
+                  echo "<td class='border text-xs md:text-base p-2'>Rp. " . number_format($row['price'], 0, ',', '.') . "</td>";
+                  echo "<td class='border text-xs md:text-base p-2'>{$row['quantity']}</td>";
+                  echo "<td class='border text-xs md:text-base p-2'>{$row['unit']}</td>";
+                  echo "
+                      <td class='border text-xs md:text-base p-2'>
+                          <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm' onclick='openEditForm(`{$row['id']}`, `{$row['name']}`, `{$row['category']}`, `{$row['price']}`, `{$row['quantity']}`, `{$row['unit']}`, `{$row['description']}`);'>
+                              <ion-icon name='information-circle-outline'></ion-icon>
+                          </button>
+                          <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm'>
+                              <a href='update.php?id={$row['id']}'><ion-icon name='pencil-outline'></ion-icon></a>
+                          </button>
+                          <button class='bg-bone text-primary text-xs px-2 py-1 rounded-sm'>
+                              <a href='index.php?delete_id={$row['id']}' onclick='return confirm(\"Apakah Anda yakin ingin menghapus produk ini?\")'><ion-icon name='trash-outline'></ion-icon></a>
+                          </button>
+                      </td>";
+                  echo "</tr>";
+                  $no++;
               }
-            } else {
+          } else {
               echo "<tr><td colspan='7' class='border text-center p-2'>No Data Available</td></tr>";
-            }
-            ?>
+          }
+          ?>
           </tbody>
         </table>
+
+        <div class="pagination mt-4 flex justify-center items-center">
+          <?php if ($page > 1): ?>
+            <a href="?page=<?= $page - 1 ?>&filter=<?= $filter ?>" class="bg-secondary text-primary px-3 py-2 rounded-l">
+              Previous
+            </a>
+          <?php endif; ?>
+
+          <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+            <a href="?page=<?= $i ?>&filter=<?= $filter ?>"
+              class="px-3 py-2 <?= $i === $page ? 'bg-primary text-white' : 'bg-secondary text-primary' ?>"><?= $i ?></a>
+          <?php endfor; ?>
+
+          <?php if ($page < $totalPages): ?>
+            <a href="?page=<?= $page + 1 ?>&filter=<?= $filter ?>" class="bg-secondary text-primary px-3 py-2 rounded-r">
+              Next
+            </a>
+          <?php endif; ?>
+        </div>
+        
+
 
         <div id="edit-form" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="overflow: auto; ; padding: 10px">
           <div class="bg-white p-8 rounded-lg w-auto" style="max-height: 90%; overflow-y:auto; margin-top: 20px; position: absolute; top: 0; left: 50%; transform: translateX(-50%)">
