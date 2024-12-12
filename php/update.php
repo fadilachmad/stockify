@@ -32,17 +32,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = $_POST['price'];
     $quantity = $_POST['quantity'];
     $description = $_POST['description'];
+    $unit = $_POST['unit'];
 
     // Validasi sederhana
-    if (!empty($name) && !empty($category) && !empty($price) && !empty($quantity)) {
-        $sql_update = "UPDATE product SET name = ?, category = ?, price = ?, quantity = ?, description = ? WHERE id = ?";
+    if (!empty($name) && !empty($category) && !empty($price) && !empty($quantity) && !empty($unit)) {
+        $sql_update = "UPDATE product SET name = ?, category = ?, price = ?, quantity = ?, unit = ?, description = ? WHERE id = ?";
         $stmt_update = $pdo->prepare($sql_update);
         $stmt_update->bindValue(1, $name, PDO::PARAM_STR);
         $stmt_update->bindValue(2, $category, PDO::PARAM_STR);
         $stmt_update->bindValue(3, $price, PDO::PARAM_STR);
         $stmt_update->bindValue(4, $quantity, PDO::PARAM_INT);
-        $stmt_update->bindValue(5, $description, PDO::PARAM_STR);
-        $stmt_update->bindValue(6, $id, PDO::PARAM_INT);
+        $stmt_update->bindValue(5, $unit, PDO::PARAM_INT);
+        $stmt_update->bindValue(6, $description, PDO::PARAM_STR);
+        $stmt_update->bindValue(7, $id, PDO::PARAM_INT);
+        
 
         if ($stmt_update->execute()) {
             header("Location: index.php");
@@ -234,6 +237,15 @@ $pdo = null;
               value="<?= htmlspecialchars($product['quantity']); ?>"
               placeholder="Quantity"
             />
+            <select class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-1/2 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
+
+            placeholder="Unit" name="unit" id="unit">
+            <option value="<?= htmlspecialchars($product['unit']); ?>" disabled selected>--Select Unit--</option>
+            <option value="kg">kg</option>
+            <option value="pcs">pcs</option>
+            <option value="liter">liter</option>
+            <option value="meter">meter</option>
+          </select>
             <textarea
               name="description"
               id="description"

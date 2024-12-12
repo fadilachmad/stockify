@@ -2,6 +2,19 @@
     require 'functions.php';
 
     if (isset($_POST["signup"])) {
+      $passwordErrors = isStrongPassword($_POST["password"]);
+    
+    if (!empty($passwordErrors)) {
+        foreach ($passwordErrors as $error) {
+            echo "<script>alert('$error');</script>";
+        }
+        exit;
+    }
+    
+    if ($_POST["password"] !== $_POST["confirmPassword"]) {
+        echo "<script>alert('Passwords do not match.');</script>";
+        exit;
+    }
         try {
             if (signup($_POST) > 0) {
                 session_start();
@@ -89,6 +102,7 @@
           class="bg-compliment mb-2 text-bone text-xs h-10 w-full p-3 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
           placeholder="Confirm Password"
         />
+        <div id="passwordErrors"></div>
         <button
           type="submit" name="signup"
           class="bg-bone text-primary w-full text-xs py-2 px-4 rounded-sm md:text-base flex items-center justify-center hover:bg-slate-200"
@@ -101,5 +115,53 @@
         <a href="login.php" class="text-secondary">Login</a>
       </p>
     </main>
+    <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const passwordInput = document.getElementById("password");
+    const confirmPasswordInput = document.getElementById("confirmPassword");
+    const submitButton = document.querySelector("button[name='signup']");
+    
+    const passwordRequirements = [
+      { regex: /.{8,}/, message: "At least 8 characters" },
+      { regex: /[A-Z]/, message: "At least one uppercase letter" },
+      { regex: /[a-z]/, message: "At least one lowercase letter" },
+      { regex: /\d/, message: "At least one digit" },
+      { regex: /[\W_]/, message: "At least one special character (!@#$%^&*)" },
+    ];
+
+    function validatePassword(password) {
+      const errors = passwordRequirements
+        .filter(req => !req.regex.test(password))
+        .map(req => req.message);
+      return errors;
+    }
+
+    function handlePasswordValidation() {
+      const errors = validatePassword(passwordInput.value);
+      const errorContainer = document.getElementById("passwordErrors");
+
+      if (errors.length > 0) {
+        errorContainer.innerHTML = `<ul class="text-sm text-red-500 mt-2">${errors
+          .map(error => `<li>${error}</li>`)
+          .join("")}</ul>`;
+        submitButton.disabled = true;
+      } else {
+        errorContainer.innerHTML = "";
+        submitButton.disabled = false;
+      }
+    }
+
+    passwordInput.addEventListener("input", handlePasswordValidation);
+
+    confirmPasswordInput.addEventListener("input", () => {
+      if (passwordInput.value !== confirmPasswordInput.value) {
+        confirmPasswordInput.setCustomValidity("Passwords do not match.");
+      } else {
+        confirmPasswordInput.setCustomValidity("");
+      }
+    });
+  });
+</script>
+
   </body>
 </html>
