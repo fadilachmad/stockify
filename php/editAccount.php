@@ -10,6 +10,21 @@ $username = $_SESSION['username'];
 
 require 'config/conn.php';
 
+// Ambil data berdasarkan username
+$username = $_SESSION['username'];
+$sql = "SELECT * FROM users WHERE username = ?";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(1, $username, PDO::PARAM_STR);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($user) {
+    // User found
+} else {
+    die("User not found.");
+}
+
+// Update data
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $username_input = htmlspecialchars(trim($_POST['username']));
     $email = htmlspecialchars(trim($_POST['email']));
@@ -39,6 +54,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         $message = "Invalid input. Make sure all the fields are filled correctly.";
     }
 }
+
+$pdo = null;
 ?>
 
 <!DOCTYPE html>
@@ -151,6 +168,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                   name="username"
                   id="username"
                   class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-96 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
+                  value="<?= htmlspecialchars($user['username']); ?>"
                   placeholder="Username"
                 />
               </div>
@@ -161,6 +179,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                   name="email"
                   id="email"
                   class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-96 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
+                  value="<?= htmlspecialchars($user['email']); ?>"
                   placeholder="email@gmail.com"
                 />
               </div>
@@ -170,6 +189,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                   name="user_bio"
                   id="user_bio"
                   class="bg-compliment mb-2 text-bone text-xs w-full md:w-96 p-3 md:h-24 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
+                  value="<?= htmlspecialchars($user['user_bio']); ?>"
                   placeholder="Write something about yourself..."
                 ></textarea>
               </div>
