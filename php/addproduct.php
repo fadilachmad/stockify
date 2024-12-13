@@ -16,11 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $category = $_POST['category'];
   $price = $_POST['price'];
   $quantity = $_POST['quantity'];
-  $unit = $_POST['unit'];
+  $unit = isset($_POST['unit']);
   $description = $_POST['description'];
 
   // Validasi sederhana
-  if (!empty($name) && !empty($category) && !empty($price) && !empty($quantity)) {
+  if (!empty($name) && !empty($category) && !empty($price) && !empty($quantity) && $unit == 'none' && !empty($description)) {
     $stmt = $pdo->prepare("INSERT INTO product (name, category, price, quantity, unit, description) VALUES (:name, :category, :price, :quantity, :unit, :description)");
     $stmt->bindValue(':name', $name);
     $stmt->bindValue(':category', $category);
@@ -38,7 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       echo "Gagal menyimpan data: " . $errorInfo[2];
     }
   } else {
-    echo "Semua field harus diisi.";
+    echo "
+    <script>
+      alert('Semua field harus diisi.');
+    </script>
+    ";
   }
 }
 
@@ -172,50 +176,57 @@ $conn = null;
         <h2 class="text-bone font-semibold md:text-xl md:mb-2">
           Add new product
         </h2>
-        <form action="" method="post">
+        <form action="" method="post" id="addProductForm">
           <input
             type="text"
             name="name"
             id="name"
             class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-1/2 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
             placeholder="Name" />
+          <span class="error-message" id="nameError"></span>
+
           <input
             type="text"
             name="category"
             id="category"
             class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-1/2 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
-
             placeholder="Category" />
+          <span class="error-message" id="categoryError"></span>
+
           <input
             type="number"
             name="price"
             id="price"
             class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-1/2 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
-
             placeholder="Price (Rp.)" />
+          <span class="error-message" id="priceError"></span>
+
           <input
             type="text"
             name="quantity"
             id="quantity"
             class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-1/2 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
-
             placeholder="Quantity" />
+          <span class="error-message" id="quantityError"></span>
 
-          <select class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-1/2 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
-
-            placeholder="Unit" name="unit" id="unit">
-            <option value="" disabled selected>--Select Unit--</option>
+          <select
+            class="bg-compliment mb-2 text-bone text-xs h-8 w-full md:w-1/2 p-3 md:h-12 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
+            name="unit"
+            id="unit">
+            <option value="none" disabled selected>--Select Unit--</option>
             <option value="kg">kg</option>
             <option value="pcs">pcs</option>
             <option value="liter">liter</option>
             <option value="meter">meter</option>
           </select>
+          <span class="error-message" id="unitError"></span>
 
           <textarea
             name="description"
             id="description"
             class="bg-compliment mb-2 text-bone text-xs h-32 w-full md:w-1/2 p-3 md:h-40 rounded-sm focus:outline-none md:text-base md:placeholder:text-base"
             placeholder="Description"></textarea>
+          <span class="error-message" id="descriptionError"></span>
 
           <button
             type="submit"
@@ -228,6 +239,60 @@ $conn = null;
     </main>
     <!-- End Main Content -->
   </div>
+
+  <script>
+    // Add event listeners for real-time validation
+    const form = document.getElementById('addProductForm');
+    const fields = ['name', 'category', 'price', 'quantity', 'unit', 'description'];
+
+    fields.forEach((field) => {
+      const input = document.getElementById(field);
+      const error = document.getElementById(`${field}Error`);
+
+      input.addEventListener('input', () => {
+        if (input.type === 'select-one' && input.value === 'none') {
+          error.textContent = `${field.charAt(0).toUpperCase() + field.slice(1)} is required.`;
+        } else if (input.value.trim() === '') {
+          error.textContent = `${field.charAt(0).toUpperCase() + field.slice(1)} is required.`;
+        } else {
+          error.textContent = '';
+        }
+      });
+    });
+
+    // Prevent form submission if there are validation errors
+    form.addEventListener('submit', (event) => {
+      let hasError = false;
+
+      fields.forEach((field) => {
+        const input = document.getElementById(field);
+        const error = document.getElementById(`${field}Error`);
+
+        if (input.type === 'select-one' && input.value === 'none') {
+          error.textContent = `${field.charAt(0).toUpperCase() + field.slice(1)} is required.`;
+          hasError = true;
+        } else if (input.value.trim() === '') {
+          error.textContent = `${field.charAt(0).toUpperCase() + field.slice(1)} is required.`;
+          hasError = true;
+        } else {
+          error.textContent = '';
+        }
+      });
+
+      if (hasError) {
+        event.preventDefault();
+      }
+    });
+  </script>
+
+  <style>
+    .error-message {
+      color: red;
+      font-size: 0.75rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+  </style>
 
   <script
     type="module"
